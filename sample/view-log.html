@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1>This is the view log page</h1>
+<table style="border: black 5px solid;">
+    <tr>
+        {% for head in headings %}
+            <th>{{head}}</th>
+        {% endfor %}
+    </tr>
+        {% for row in the_data %}
+        
+        <tr>
+            <td>{{row}}</td>
+        </tr>
+            
+        {% endfor %}
+    
+</table>
+
+<table style="border: black 5px solid;">
+    {% for head in headings %}
+        <th>{{head}}</th>            
+        {% endfor %}
+
+    {% for line in log_data %}
+        <tr>
+            <td>{{line}}</td>
+        </tr>
+    {% endfor %}
+    
+
+</table>
+
+{% endblock %}

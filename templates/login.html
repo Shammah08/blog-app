@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<br>
+
+<div class="contact-me"  style="margin: -3% 100px 0px 100px ; height: 500px; width: 80%; border-radius: 10px;">
+        <p>
+            Proceed to log In!!
+        </p>
+        <form action='/login' method="POST" style="color:aliceblue ;" s>
+            Username:<input type="text" name="username" placeholder="Enter Username" required><br><br>
+            Password:<input type="password" name="password" placeholder="Enter Password" required><br><br>
+            <button style="margin-left: 80px;">Login</button>
+        </form>
+    </div>
+    
+   
+   
+{% endblock %}

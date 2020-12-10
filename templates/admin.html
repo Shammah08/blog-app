@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="color" style="height: 100px; background-color: black; border-bottom: 20px;">
+</div>
+<div class="contact-me" style="background-color: white; color: black; height: 400px;">
+    <h1>View Log details </h1>
+        <form action="/view-data" method="POST">
+            <table>
+                <tr>
+                    <td>
+                        Enter Username:<input type="text" name="username" placeholder="Name " style="border-radius: 10px; height: 25px;" required> <br><br>
+                        Enter Password:&nbsp;<input type="password" name="password" placeholder="Password " style="border-radius: 10px; height: 25px;" required> 
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="action" style="font-size: 12px;">
+                            <ul style="display: flex; flex: 1; margin-left: 100px;"">
+                                <li >
+                                    <form action="/view-data" method="POST">
+                                        <button style="background-color: black; color: white; height: 30px; width: 80px;">View</button> 
+                                    </form></li>&nbsp;&nbsp;&nbsp;
+                                    <!--
+                                <li>
+                                    <form action="/clear" method="POST">
+                                        <button style="background-color: white; color: black; width: 80px; height: 30px;">Clear</button> 
+                                    </form> </li>-->
+                            </ul>
+
+                        </div>
+                                           
+                    </td>  
+                   
+                </tr>
+            </table>  
+        </form>
+</div>
+<div class="data">
+    <table style="display: flex; flex: 1;">
+        {% for item in data %}
+            <tr><td style="border: 2px solid black; margin : 50%; align-items: center;"> >>>{{item}}</td></tr> 
+        {% endfor%}
+    </table>
+</div>
+{% endblock %}

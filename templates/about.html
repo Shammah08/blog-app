@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block body %}
+        <section>                
+            <!--text-->
+            <div class="text-container">
+                <p>My Portfolio
+                <p>
+                    &nbsp;Steve Shammah             
+                </p>
+                <p>
+                    Nunc placerat ullamcorper ante a maximus. Nulla facilisi.
+                     Curabitur eu nisl tortor. Sed sit amet iaculis ipsum.
+                     Nullam tincidunt efficitur arcu, ac malesuada orci mattis eu.
+                     Donec venenatis non nibh eget porttitor.
+                      Vivamus accumsan leo nec sem consectetur aliquet.
+                      Donec id felis eget nisi placerat varius eu et nibh. 
+                      Donec scelerisque eros leo. Mauris sed massa et lectus facilisis varius.
+                       Nam sit amet elit at eros mollis ullamcorper.
+                        Maecenas accumsan sed nulla id placerat.
+
+                </p>
+                &nbsp;&nbsp;<em style="color: whitesmoke;">Get in touch!</em><br>
+                <div class = "action" style="display: flex; flex: 1;">
+                        <a href="mailto:shammahodhiambo@gmail.com"><button class="hire-btn">Send Mail</button></a>
+                        <a href="tel:0795058630"><button class="down-cv">Call</button></a>
+                </div>
+            </div>
+
+            <!--model-->
+            <img src="/templates/profile.jpg" class="model" alt="MODEL PHOTO">
+        </section>
+        <!--about-section-->
+        <div class="about-container">
+            <!--img----->
+            <img src="/templates/‪profile.jpg" class="mini-profile" alt="COOL PHOTO">
+            <!--about-text----->
+            <div class="about-text">
+                <p>About Me</p>
+                <p>Lorem Ipsum</p>
+                <p>"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
+                    "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
+                    </p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et laoreet elit. Phasellus vitae purus scelerisque, porttitor sapien sit amet, vestibulum tortor. 
+                        </p><br>
+
+                        <div class = "action" style="display: flex; flex: 1; justify-content: space-between;">
+                            <form action="/signup-page">
+                                <button >Sign Up</button>
+                            </form> 
+                            <form action="/login-page">
+                                <button>Log In</button>
+                            </form>     
+        
+                        </div>
+                        
+                
+            </div>
+
+        </div>
+        <!--services-------->
+        <div class="services">
+            <div class="services-text">
+                <p>Service</p>
+                <p>Lorem Ipsum</p>
+                <p>"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
+                    "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
+                </p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras feugiat mi eget porta ultrices. Ut.
+                </p>
+                
+            </div>
+            <div class="box-container">
+                <!--box-1----->
+                <div class="box-1" >
+                    <span>1</span>
+                    <p>Lorem Ipsum</p>
+                    <p>who seeks after it and wants to have it</p>
+                    <p><em>Lorem Ipsum</em></p>
+                    <button> Read More</button>
+                </div>
+                <!--box-2----->
+                <div class="box-2">
+                    <span>2</span>
+                    <p>Lorem Ipsum</p>
+                    <p>who seeks after it and wants to have it</p>
+                    <p><em>Lorem Ipsum</em></p>
+                    <button> Read More</button>
+                </div>
+                <!--box-3----->
+                <div class="box-3">
+                    <span>3</span>
+                    <p>Lorem Ipsum</p>
+                    <p>who seeks after it and wants to have it</p>
+                    <p><em>Lorem Ipsum</em></p>
+                    <button> Read More</button>
+                </div>    
+            </div>    
+        </div>
+        <!--contact me-->
+        <div class="contact-me">
+            <p>"...Simply because it is pain..."</p>
+            <button>Contact Me</button>
+        </div>
+    
+    
+    {% endblock%}
+    

@@ -1,0 +1,6 @@
+body{
+    display: grid;
+    grid-template-columns: 10px,auto;
+    grid-template-rows: 1;
+    background-image: url(../templates/background.gif)
+}

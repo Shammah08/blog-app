@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<br><br>
+<div class="about-text" style="color: white; width: 100%; height: 10px;">
+    <form action="/play"> 
+        <ul style="display: flex; flex: 1; justify-content: space-around;">
+            <form action="/play"><li><button>Search</button></li></form>
+            <form action="/play"><li><button>BMI</button></li></form>
+            <form action="/play"><li><button>KeyGen</button></li></form>
+        </ul>        
+    </form>
+</div>
+<div class="box-container" style="color: black; height: 400px; margin: 50px; font-family: monospace;">
+
+    <!--box-1----->
+    <div class="box-1" >
+        <form action="/search" method="POST">
+            Search for all letter in a phrase!!<br><br>
+            <table>
+                <tr><td>Letter</td><td><input type="text" required name="letter" value="aeiuo"></td></tr>
+                <tr><td>Phrase</td><td><input type="text" required name="phrase" placeholder="Phrase to Search"></td></tr>
+                <tr><td></td>{% for item in result %}
+                                {{item}}
+                            {% endfor %}
+
+                </tr>
+                <tr><td></td><td><button style="background-color: black;"> Search</button></td></tr>
+            </table>
+        </form>
+    </div>
+    <!--box-2----->
+    <div class="box-2">
+        Calculate your Basic Metabolic Index...<br>
+        <form action="/bmi" method="POST">
+            <table>
+                <tr><td>Weight</td><td><input type="text" required name="weight" placeholder="in Kgs" ></td></tr>
+                <tr><td>Height</td><td><input type="text" required name="height" placeholder="in M"></td></tr>
+                <tr><td></td><td>{{bmi}}</td></tr>
+                <tr><td></td><td><input type="text" placeholder="Enter name" name="name" required></td> </tr>
+                <tr><td></td><td><button style="background-color: black;"> BMI</button></td> </tr>
+               
+            </table>
+        </form>
+    </div>
+    <!--box-3----->
+    <div class="box-3">
+        <span>3</span>
+        <form action="/keygen">
+            <p>Press button to generate 16 key code</p>
+            <table>
+                <tr><td>Key:&nbsp;&nbsp; </td><td style="border:1px solid black;">{{key}}</td></tr>
+                <tr></tr>
+                <tr><td></td><td><button style="background-color: black;"> Generate</button></td></tr>
+            </table>
+        </form>
+      
+    </div> 
+</div> 
+<div class="about-container" style="color: white; background-color: black;">
+    <section class="contact-me">
+        <p style="font-family: monospace; font-size: 15px;">
+           I'm thinking of a number between 1 and 5:<br>
+           Are you thinking what i'm thinking!!
+        </p>
+        <form action="/lucky_no" method="GET,POST">
+            <table>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;<input type="text" placeholder="Take a guess" name="guess" required></td>
+                    <tr>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{response}}</td>  
+                    </tr>                       
+                </tr>
+                <tr>
+                    <td>
+                        <button style="background-color: black; color: white;">Lucky Number</button>
+                    </td>
+                </tr>
+            </table>
+    </section>    
+</div>   
+
+
+
+{% endblock %}

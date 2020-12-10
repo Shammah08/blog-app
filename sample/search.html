@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block body %}
+        <form action="/search" method="POST">
+            <h2 style="text-align: center;"><em>Search for Phrase</em></h2>
+            <table>
+                <tr>
+                    <td>Letters:</td>
+                    <td><input type="text" name="letter" placeholder="enter letters" value="aeiou" ></td>
+                </tr>
+                <tr>
+                    <td>Phrase:</td>
+                    <td><input type="text" name="phrase" placeholder="to search in phrase" required> </td>
+                </tr>
+                </table>
+                <br>
+                <input type="text" name="name" placeholder="Name nigga" style="margin-left:300px;" required> &nbsp;&nbsp;<input type="submit" value="Search" >
+        </form>
+        <br><hr>
+        <form action="/bmi" method="POST">
+            <h2 style="text-align: center;"><em>Calculate BMI</em></h2>
+            <table>
+                <tr ><td>Weight</td><td>Height</td></tr>
+                <tr><td><input type="text" placeholder="In KGS" name="weight" required></td><td><input type="text" placeholder="In M" name="height" required></td></tr>
+            </table>
+            <div class="submit-bmi" style="margin-left: 100px;">
+                <input type="text" value="Name nigga" name="name" required> &nbsp;&nbsp;<input type="submit" value="Calculate">
+            </div>    
+            
+        </form>
+        <br><hr>
+{% endblock %}

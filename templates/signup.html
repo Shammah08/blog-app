@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block body %}
+        <div class="color" style="height: 200px; background-color: black;">
+        </div>
+
+        <div class="contact-me">
+            <h1>Log your details </h1>
+            <form action="/signup" method="POST">
+                <table>
+                    <tr><td>First name:</td><td><input name= 'fname' type="text" placeholder="&nbsp;First name" style="border-radius: 10px; height: 25px;" required></td></tr>
+                    <tr><td>Last name:</td><td><input name= 'lname' type="text" placeholder="&nbsp;Last name" style="border-radius: 10px; height: 25px;" required></td></tr>
+                    <tr><td>Email address:</td><td><input name='email' type="text" placeholder="&nbsp;Email address" style="border-radius: 10px; height: 25px;"></td></tr>
+                    <tr><td>Password:</td><td><input name='password' type="password" placeholder="&nbsp;Password" style="border-radius: 10px; height: 25px;" required></td></tr>
+                </table>
+                <br>
+                <button style="margin-left: 130px;">Sign Up </button>
+            </form>   
+        </div>
+        <br>
+        
+{% endblock %}

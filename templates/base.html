@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    {% block head %}
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE-edge">
+        <meta name="viewport" content="width=device-width, initial-scale = 1.0">
+        <title>Personal Website</title>
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+    </head>
+    {% endblock %}  
+    <body>
+        <!--nav-->
+        <nav>
+            <!--logo-->
+            <a href="/home" class='logo'>Lorem Ipsum</a>
+            <!--menu-->
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/login-page">Log In</a></li>
+                <li><a href="/signup-page">Sign Up</a></li>
+                <li><a href="/admin">Admin</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/about" class="active">About</a></li>
+                
+
+            </ul>
+            <!--bars-->
+            <div class="toggle">
+
+            </div>
+        </nav>
+        {% block body %}
+        
+
+        {% endblock %}
+
+        <footer class="footer">
+            <p>Lorem Ipsum</p>
+            <p class="footer-text">
+                "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
+            </p>
+            <!--social----->
+            <div class="social-icons" >
+                <a href="http://www.instagram.com/steveshammah" target="blank"></a>
+                <a href="http://www.instagram.com/steveshammah" target="blank"></a>
+                <a href="http://www.instagram.com/steveshammah" target="blank"></a>
+                
+            </div>
+            <!--copyright----->
+            <p class="copyright">Copyright by Lorem Ipsum</p>
+        </footer>  
+        <div class="a-social-b" >
+            <a href="https://www.instagram.com/steveshammah"target="blank"></a>
+            <a href="http://www.instagram.com/steveshammah" target="blank"></a>
+            <a href="http://www.instagram.com/steveshammah" target="blank"></a>
+            
+        </div>    
+    </body>
+</html>
