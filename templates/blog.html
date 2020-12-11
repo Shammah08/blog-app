@@ -1,17 +1,15 @@
 {% extends 'base.html' %}
 
-{%block body%}
-<br><br><br>
-    <div id="header" style="font-family: monospace;  font-size: 18px; margin-left: 20px;"> 
-        <h1>Create A Post.</h1>
-        <p>
-            You got something interesting for the world to see?<br>
-            Free your mind...
-        </p>
-        <form>
-            <textarea rows="20" cols="100" placeholder="Create a post"></textarea> <br><br>           <button class="down-cv" style="height: 40px; width: 80px; margin-left: 700px; border-radius: 10px;">Create</button>
-        </form>
-        <br>
-    </div>
-    
-{% endblock %}
+{% block body %}
+<br>
+<div class="space" style="margin:5%;"></div>
+<div class="blog" style="height: 600px; margin-left: 30px;">
+    <a href="/create"><button>Create Post</button></a><br>
+    {% for i in posts %}
+        <div >
+            {{i}}
+        </div> 
+    {% endfor %} 
+    <br>
+</div>
+{%endblock%}

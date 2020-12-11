@@ -39,10 +39,14 @@ def signup():
     email = request.form['email']
     password = request.form['password']
     return sign_up(fname,lname,email,password,time_stamp)
-
+#VIEW BLOG
 @app.route('/blog')
 def blog():
     return render_template('blog.html')
+#CREATE NEW POST
+@app.route('/create')
+def create():
+    return render_template('posts.html')
 
 @app.route('/')
 @app.route('/home')
@@ -69,6 +73,14 @@ def view_data():
     password = request.form['password']
     data = view_log(username,password)
     return render_template('admin.html', data = data) 
+
+@app.route('/post', methods=['POST','GET'])
+def post():
+    author = request.form['author']
+    title = request.form['title']
+    content = request.form['content']
+    save = create_post(author,title,content)
+    return render_template('posts.html', save = save)
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -97,4 +109,4 @@ def bmi():
     return render_template('home.html', bmi = bmi)
 
 if __name__ == '__main__':
-    app.run(port = 5000,debug=True)
+    app.run(port = 3000,debug=True)

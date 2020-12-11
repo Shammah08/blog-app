@@ -1,5 +1,6 @@
 from datetime import datetime
 import random
+import hashlib
 from flask import Flask,request,render_template,abort
 import mysql.connector
 
@@ -9,6 +10,7 @@ DBCONGIF = {
     'password' : 'admin',
     'database' : 'myappDB'
 }
+
 #CREATE CONNECTION TO DB
 conn = mysql.connector.connect(**DBCONGIF)
 #CONFIG CURSOR TO ACCESS DB I.E READ AND WRITE
@@ -41,8 +43,7 @@ def sign_up(fname:str,lname:str,email:str,password:str,time_stamp:str):
     conn.close()
     with open('signup.log', 'a') as signup:
         print(f'Username: {username.upper()}\nEmail : {email.capitalize()}\nPassword : {password}\nTimestamp: {time_stamp}|', file=signup, end='\n')
-    users[fname] = password
-    return('successful sign in')
+        return('successful sign in')
 #log in func takes in username and password
 def log_in(username,password):
     for account in users:
@@ -85,6 +86,16 @@ def update_log(update):
         updates = input('New stuff: ')
         print(f'These are the new updates by admin\n{updates} \nOn: {time_stamp}|', file=vlog,end='\n')
     return 'successful log update'
+
+#CREATE POST
+def create_post(author,title,content):
+    log_details(author,'Create Post')
+    create = '''INSERT INTO post(author, title, content) VALUES (%s,%s,%s)'''
+    cursor.execute(create,(author,title,content))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return 'POST SAVED SUCCESSFULLY'
 #generate number and asks user to guess
 def lucky_number(guess):
     my_number = random.randint(1,3)
@@ -129,3 +140,5 @@ def bmi_calc(name: str,weight:int, height:float):
             return f'{name.capitalize()}: Eey you underweight bro --- {bmi}'
         else:
             return f'{name.capitalize()}: Bro you winning at this bmi shit --- {bmi}'
+
+
