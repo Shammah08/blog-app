@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, escape, abort
+from flask import Flask, render_template, request, redirect, escape, abort,url_for
 from datetime import datetime
 from methods import *
 import mysql.connector
@@ -40,15 +40,17 @@ def signup():
     password = request.form['password']
     return sign_up(fname,lname,email,password,time_stamp)
 #VIEW BLOG
+@app.route('/')
 @app.route('/blog')
 def blog():
-    return render_template('blog.html')
+    post = get_post()
+    return render_template('blog.html', post = post)
 #CREATE NEW POST
 @app.route('/create')
 def create():
     return render_template('posts.html')
 
-@app.route('/')
+
 @app.route('/home')
 def landing_page():
     return render_template('home.html')
@@ -60,12 +62,18 @@ def clear():
 def play():
     return render_template('play.html')
 
-#finish up on this update log
+
 #ACTIONS
-@app.route('/update')
-def update_data():
-    update = request.form['update']
-    return update_log(update)
+#EDIT POST
+@app.route('/edit')
+def edit_post():
+    post = get_post()
+
+
+#DELETE POST
+@app.route('/delete')
+
+    
 
 @app.route('/view-data', methods=['POST'])
 def view_data():
@@ -80,7 +88,7 @@ def post():
     title = request.form['title']
     content = request.form['content']
     save = create_post(author,title,content)
-    return render_template('posts.html', save = save)
+    return redirect(url_for('blog'))
 
 @app.route('/search', methods=['POST'])
 def search():

@@ -5,11 +5,28 @@
 <div class="space" style="margin:5%;"></div>
 <div class="blog" style="height: 600px; margin-left: 30px;">
     <a href="/create"><button>Create Post</button></a><br>
-    {% for i in posts %}
-        <div >
-            {{i}}
-        </div> 
-    {% endfor %} 
-    <br>
-</div>
+    <em>{{save}}</em>
+  {%for i in post%}
+  <div class="content" style="margin-left:25%; width:800px; border: 1px dotted black;">
+    
+      <table style="display: flex;flex: 1; justify-content: space-around;">
+          <tr>
+              <th>Title: {{i[2]}}</th>
+              <th>Author:{{i[1]}} </th>
+              <th>&nbsp;</th>
+              <th style="text-align:right;">Post ID:{{i[0]}}</th>
+          </tr>
+        <tr style="height: max-content;">
+            <td style="width: 600px; font-family: monospace;">{{i[3]}}</td>
+        </tr>
+        <tr>
+            <td>Uploaded on : {{i[4]}}</td>
+           <form action="/edit"><td><button>Edit</button></td></form>
+            <form action="/delete"><td><button>Delete</button></td></form>
+        </tr>  
+        <tr></tr>  
+      </table>
+  </div>
+  {%endfor%}
+  <br>
 {%endblock%}

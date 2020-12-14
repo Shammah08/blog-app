@@ -2,17 +2,17 @@
 
 {%block body%}
 <br><br><br>
-    <div id="header" style="font-family: monospace;  font-size: 18px; margin-left: 20px;"> 
+    <div id="header" style="font-family: monospace;  font-size: 16px; margin-left: 20px; height: 850px;"> 
         <h1>Create A Post.</h1>
         <p>
             You got something interesting for the world to see?<br>
             Free your mind...
         </p>
         <form action="/post" method="POST">
-            Enter author name:<input type="text" name="author" placeholder="Author Name" required> &nbsp;&nbsp;&nbsp;
-            Post Title:<input type="text" name="title" placeholder="Post Title" required><br>
-            <textarea rows="20" cols="100" name= 'content' placeholder="Create a post"></textarea> <br><br>  
-            {{save}}&nbsp;<button class="down-cv" style="height: 40px; width: 80px; margin-left: 700px; border-radius: 10px;">Create</button>
+            Author name:<input type="text" name="author" placeholder="Author" required> &nbsp;&nbsp;&nbsp;
+            Post Title:<input type="text" name="title" placeholder="Title" required><br><br>
+            <textarea rows="30" cols="140" name= 'content' placeholder="Free your mind"></textarea> <br>
+            <button class="down-cv" style="height: 40px; width: 80px; margin-left: 1300px; border-radius: 10px;">Create</button>
         </form>
        
         <br>

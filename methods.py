@@ -11,10 +11,19 @@ DBCONGIF = {
     'database' : 'myappDB'
 }
 
-#CREATE CONNECTION TO DB
-conn = mysql.connector.connect(**DBCONGIF)
-#CONFIG CURSOR TO ACCESS DB I.E READ AND WRITE
-cursor = conn.cursor()
+class DbManager():
+    def __init__(self,**DBCONGIF)->None:
+        self.config = DBCONGIF
+    
+    def __enter__(self)->'cursor':
+        self.conn = mysql.connector.connect(**DBCONGIF)
+        self.cursor = self.conn.cursor()
+        return self.cursor
+
+    def __exit__(self,arg1,arg2,arg3)->None:
+        self.conn.commit()
+        self.cursor.close()
+        self.conn.close()
 
 time_stamp = datetime.now().strftime('%c')
 users = {
@@ -51,14 +60,11 @@ def log_in(username,password):
         if username in users:   #check username
             if users[username] == password: #check password
                 log_details(username,'login')
-                log = '''INSERT INTO login (username, password)
-                VALUES
-                (%s,%s)'''
-                cursor.execute(log,(username,password))
-                conn.commit()
-                cursor.close()
-                conn.close()
-                return'successful login'
+                with DbManager(**DBCONGIF) as cursor:
+                    log = '''INSERT INTO login (username, password)
+                    VALUES (%s,%s)'''
+                    cursor.execute(log,(username,password))
+                return f'successful login {username}'
             else:
                 return'wrong password'
         else:
@@ -90,12 +96,20 @@ def update_log(update):
 #CREATE POST
 def create_post(author,title,content):
     log_details(author,'Create Post')
-    create = '''INSERT INTO post(author, title, content) VALUES (%s,%s,%s)'''
-    cursor.execute(create,(author,title,content))
-    conn.commit()
-    cursor.close()
-    conn.close()
+    with DbManager(**DBCONGIF) as cursor:
+        create = '''INSERT INTO post(author, title, content) VALUES (%s,%s,%s)'''
+        cursor.execute(create,(author,title,content))
     return 'POST SAVED SUCCESSFULLY'
+def get_post():
+    with DbManager(**DBCONGIF) as cursor:
+        fetch = '''select * from post order by date DESC '''
+        cursor.execute(fetch)
+        post = cursor.fetchall()
+        all_post = []
+        for i in range(len(post)):
+            all_post.append(post[i])
+        return all_post
+            
 #generate number and asks user to guess
 def lucky_number(guess):
     my_number = random.randint(1,3)
@@ -140,5 +154,3 @@ def bmi_calc(name: str,weight:int, height:float):
             return f'{name.capitalize()}: Eey you underweight bro --- {bmi}'
         else:
             return f'{name.capitalize()}: Bro you winning at this bmi shit --- {bmi}'
-
-
