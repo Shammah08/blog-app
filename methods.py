@@ -89,8 +89,8 @@ def update_log(update):
 def create_post(author,title,content)-> None:
     log_details(author,'Create Post')
     with DbManager(**DBCONGIF) as cursor:
-        create = '''INSERT INTO post(author, title, content) VALUES (%s,%s,%s)'''
-        cursor.execute(create,(author,title,content))
+        SQL = '''INSERT INTO post(author, title, content) VALUES (%s,%s,%s)'''
+        return cursor.execute(SQL,(author,title,content))
     
 #GET POST FROM DB
 def get_post() ->'Posts':

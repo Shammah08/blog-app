@@ -10,7 +10,7 @@ count = len(get_post())
 @app.route('/')
 def root():
     blog = get_post()
-    number_of_post= len(blog)
+    count= len(blog)
     recent = []
     for k,v  in enumerate(blog):
         if int(k) <5:
@@ -92,8 +92,11 @@ def edit(id):
             title = request.form['title']
             content = request.form['content']
             SQL = '''UPDATE  post set author = %s, title = %s, content = %s where post_id = %s'''
-            cursor.execute(SQL,(author,title,content,id,))        
-            return  redirect('/blog')
+            cursor.execute(SQL,(author,title,content,id,)) 
+            SQL_2 = '''SELECT * FROM post WHERE post_id = %s '''
+            cursor.execute(SQL_2,(id,))
+            result = cursor.fetchall()       
+            return render_template('post.html', content= result , count=count)
         else:
             SQL = '''SELECT * FROM post WHERE post_id = %s'''
             cursor.execute(SQL,(id,))
@@ -115,7 +118,7 @@ def view_data():
     return render_template('admin.html', data = data) 
 
 @app.route('/post', methods=['POST','GET'])
-def create_post():
+def new_post():
     author = request.form['author']
     title = request.form['title']
     content = request.form['content']
