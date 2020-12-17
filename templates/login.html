@@ -1,17 +1,19 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<br>
-
-<div class="contact-me"  style="margin: -3% 100px 0px 100px ; height: 500px; width: 80%; border-radius: 10px;">
-        <p>
+<div class="container">
+     <h2>
             Proceed to log In!!
-        </p>
-        <form action='/login' method="POST" style="color:aliceblue ;" s>
-            Username:<input type="text" name="username" placeholder="Enter Username" required><br><br>
-            Password:<input type="password" name="password" placeholder="Enter Password" required><br><br>
-            <button style="margin-left: 80px;">Login</button>
+     </h2>
+        <form action='/login' method="POST">
+            Username:<input type="text" name="username" placeholder="Enter Username" required class="form-control"><br>
+            Password:<input type="password" name="password" placeholder="Enter Password" required class="form-control"><br>
+            <button style="margin-left: 300px; width: 200px;"  class="btn btn-secondary">Login</button>
         </form>
+        <br>
+        <p>
+            Don't have an account? <a href="/signup-page">Sign Up</a> instead.
+        </p>
     </div>
     
    

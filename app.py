@@ -5,19 +5,21 @@ app = Flask(__name__)
 """
 Check request method and not GET page when not signed in
 """
+count = len(get_post())
 #TEMPLATE ROUTES
 @app.route('/')
 def root():
-    return render_template('about.html')
+    blog = get_post()
+    number_of_post= len(blog)
+    recent = []
+    for k,v  in enumerate(blog):
+        if int(k) <5:
+            recent.append(v)
+    return render_template('home.html', recent = recent, count=count)
 #LOGIN PAGE
 @app.route('/login-page')
 def login():
     return render_template('login.html')
-#ABOUT
-@app.route('/about')
-def bio():
-    post = ['steve',"Sam", "Dweet Fi Di Love"]
-    return render_template('edit.html' ,post= post)
 #SIGN UP PAGE
 @app.route('/signup-page')
 def sign():
@@ -37,23 +39,21 @@ def log():
 def signup():
     fname  = request.form['fname']
     lname = request.form['lname']
+    username = fname +  lname
     email = request.form['email']
     password = request.form['password']
-    return sign_up(fname,lname,email,password,time_stamp)
+    sign_up(fname,lname,email,password,time_stamp)
+    return render_template('home.html', username = (username))
 #VIEW BLOG
-
 @app.route('/blog')
 def blog():
     post = get_post()
-    return render_template('blog.html', post = post)
+    count = len(post)
+    return render_template('blog.html', post = post, count= count)
 #CREATE NEW POST
-@app.route('/create')
+@app.route('/blog/create')
 def create():
-    return render_template('posts.html')
-
-@app.route('/home')
-def landing_page():
-    return render_template('home.html')
+    return render_template('newposts.html')
 
 @app.route('/clear',methods = ['GET'])
 def clear():
@@ -62,7 +62,28 @@ def clear():
 def play():
     return render_template('play.html')
 #ACTIONS
-#EDIT POST
+#SEARCH APP
+@app.route('/search/<keyword>', methods=['POST'])
+def search(keyword):
+    keyword = request.form['keyword']
+    print(keyword)
+    result = db_search(keyword)
+    authors = result[0]
+    posts = result[1]
+    return render_template('result.html' ,authors = authors, posts = posts, keyword= keyword)
+
+#GET POST
+@app.route('/blog/<int:id>')
+def post(id):
+    with DbManager(**DBCONGIF) as cursor:
+        SQL = '''SELECT * FROM post WHERE post_id = %s'''
+        cursor.execute(SQL,(id,))
+        post = cursor.fetchall()
+        content = []
+        for i in post:
+            content.append(i)
+    return render_template('post.html' ,content= content, count=count)
+    #EDIT POST
 @app.route('/blog/edit/<int:id>', methods  = ['GET', 'POST'])
 def edit(id):
     with DbManager(**DBCONGIF) as cursor:
@@ -94,32 +115,32 @@ def view_data():
     return render_template('admin.html', data = data) 
 
 @app.route('/post', methods=['POST','GET'])
-def post():
+def create_post():
     author = request.form['author']
     title = request.form['title']
     content = request.form['content']
     save = create_post(author,title,content)
     return redirect(url_for('blog'))
 
-@app.route('/search', methods=['POST'])
-def search():
+@app.route('/play/search', methods=['POST'])
+def search_letter():
     letter = request.form['letter']
     phrase  = request.form['phrase']
     result = str(search4letters(letter, phrase))
-    return render_template('home.html', result = result)
+    return render_template('play.html', result = result)
 
-@app.route('/lucky_no', methods=['POST','GET'])
+@app.route('/play/lucky_no', methods=['POST','GET'])
 def lucky():
     guess = int(request.form.get('guess',False)) 
     response = lucky_number(guess)
-    return render_template('home.html',response = response)
+    return render_template('play.html',response = response)
 
-@app.route('/keygen')
+@app.route('/play/keygen')
 def keygen():
     key = password_gen()
-    return render_template('home.html', key = key)
+    return render_template('play.html', key = key)
     
-@app.route('/bmi', methods=['POST'] )
+@app.route('/play/bmi', methods=['POST'] )
 def bmi():
     name = request.form['name']
     weight = int(request.form['weight'])
@@ -129,3 +150,6 @@ def bmi():
 
 if __name__ == '__main__':
     app.run(port = 3000,debug=True)
+
+
+root()

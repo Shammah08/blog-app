@@ -2,21 +2,16 @@
 
 {% block body %}
 
-{%for i in post%}
-<br>
-<div class="container">
-  <h2>Title: {{i[2]|safe}}</h2>
-  <em>Author:{{i[1]}} <br> Posted on : {{i[4]}}</em><br>
-  <small>Post ID: {{i[0]}}</small><br><br>
-  <article style="white-space: pre-wrap; ">{{i[3]}}</article><br>
-  <div style="display: inline;justify-content: space-between;">
-    <a href='/blog/delete/{{i[0]}}'><input type="button" value="Delete" style="display: inline; "
-        class="btn btn-danger"></a>&nbsp;&nbsp;&nbsp;
-    <a href='/blog/edit/{{i[0]}}'><input type="button" value="Edit" style="display: inline;"
-        class="btn btn-primary"></a>
+  <h1 style="text-align: center;">Welcome To Wakanda</h1>
+  {%for item in post%}
+  <div>
+  <h3>Title: {{item[2]}}</h3>
+  <em>Author: {{item[1]}} <br> Posted on : {{item[4]}}</em><br>
+  <small>Post ID: {{item[0]}}</small><br><br>
+  <article style="white-space: pre-wrap; ">{{item[3][0:200]}}...<a href="/blog/{{item[0]}}">Continue Reading</a></article><br>
   </div>
   <hr >
-</div>
 {%endfor%}
+</div>
 <br>
 {%endblock%}

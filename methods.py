@@ -33,25 +33,18 @@ users = {
 }
 #activity log func
 def log_details(username:str,action:str):
-    with open('log.log','a') as log:
+    with open('../log.log','a') as log:
         print(f'{username.upper()} accessed the log on {time_stamp}\nAction: {action.upper()}|', file=log, end='\n',sep = '|')
         #print(username.form, username.remote_addr, username.user_agent, file=log, end='\n')
     return 'success'
 #sign_up function to log details in txt file    
 def sign_up(fname:str,lname:str,email:str,password:str,time_stamp:str):
-    username = (' ').join((fname,lname))
-    log_details(username,'signup')
-    users[username] = password  
-    signup = '''INSERT INTO signup (first_name,last_name, email,password) 
-    VALUES
-    (%s,%s,%s,%s)'''
-    cursor.execute(signup,(fname,lname,email,password))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    with open('signup.log', 'a') as signup:
-        print(f'Username: {username.upper()}\nEmail : {email.capitalize()}\nPassword : {password}\nTimestamp: {time_stamp}|', file=signup, end='\n')
-        return('successful sign in')
+    with DbManager(**DBCONGIF) as cursor:
+        signup = '''INSERT INTO signup (first_name,last_name, email,password) 
+        VALUES
+        (%s,%s,%s,%s)'''
+        return cursor.execute(signup,(fname,lname,email,password))
+        
 #log in func takes in username and password
 def log_in(username,password):
     for account in users:
@@ -63,7 +56,7 @@ def log_in(username,password):
                     log = '''INSERT INTO login (username, password)
                     VALUES (%s,%s)'''
                     cursor.execute(log,(username,password))
-                return f'successful login {username}'
+                return render_template('home.html', username = username)
             else:
                 return'wrong password'
         else:
@@ -110,9 +103,20 @@ def get_post() ->'Posts':
             all_post.append(post[i])
         return all_post
 
+def db_search(keyword):
+    with DbManager(**DBCONGIF) as cursor:   
+            SQL_POST = '''SELECT post.content FROM  post WHERE content LIKE  "%s%%" '''
+            cursor.execute(SQL_POST,keyword)
+            posts = cursor.fetchall()
+            SQL_AUTHORS = '''SELECT post.author FROM post WHERE author  LIKE  "%s%%" '''
+            cursor.execute(SQL_AUTHORS,keyword)
+            authors = cursor.fetchall()
+            result = [authors,posts]
+    return result
+
 def  edit_post(id):
     with DbManager(**DBCONGIF) as cursor:
-        SQL = '''SELECT * FROM post WHERE post_id = %s'''
+        SQL = '''SELECT * FROM post WHERE post_id  = %s'''
         cursor.execute(SQL,(id,))
         post = cursor.fetchall()
         content = []
@@ -169,5 +173,3 @@ def bmi_calc(name: str,weight:int, height:float):
             return f'{name.capitalize()}: Eey you underweight bro --- {bmi}'
         else:
             return f'{name.capitalize()}: Bro you winning at this bmi shit --- {bmi}'
-
-

@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <meta name="viewport" content="width=device-width, initial-scale = 1.0">
-    <title>Personal Website</title>
+    <title>{{title}}</title>
     <!--<link rel="stylesheet" type="text/css" href="/static/style.css">-->
     <link href="/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -17,56 +17,56 @@
 {% endblock %}
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <nav>
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/home">MyApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                        <li class="nav-item active">
-                            <a class="nav-link" aria-current="page" href="/blog">Blog</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/about">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="/login-page" tabindex="-1"
-                                aria-disabled="true">Connect</a>
-                        </li>
-                    </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
-        <div class="container">
-            <!--nav-->
-            <!--logo-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/blog">Blog<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login-page">Login</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        More!!
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://www.instagram.com/steveshammah" target="blank">Social</a>
+                        <a class="dropdown-item" href="/admin">Admin</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Contact Support</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Disabled</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" action="/search/<keyword>" method="POST">
+                <input class="form-control mr-sm-2" type="search" name="keyword" placeholder="Search Site" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
         </div>
+    </nav>
     </nav>
     <div class="nav-scroller bg-white shadow-sm">
         <nav class="nav nav-underline" aria-label="Secondary navigation">
-          <a class="nav-link active" aria-current="page" href="#">My App</a>
-          <a class="nav-link" href="#">
-            Friends
-            <span class="badge bg-light text-dark rounded-pill align-text-bottom">27</span>
-          </a>
-          <a class="nav-link" href="#">Explore</a>
-          <a class="nav-link" href="#">Suggestions</a>
-          <a class="nav-link" href="#">Link</a>
-          <a class="nav-link" href="#">Link</a>
-          <a class="nav-link" href="#">Link</a>
-          <a class="nav-link" href="#">Link</a>
-          <a class="nav-link" href="#">Link</a>
+            <a class="nav-link" href="/blog">
+                All Posts
+                <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{count}}</span>
+            </a>
+            <a class="nav-link" href="#">Disabled</a>
+            <a class="nav-link" href="/play">Explore</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/blog/create" class="float-right"><button style="display: inline; " class="btn btn-light">+Add
+                    Post</button></a>
         </nav>
-      </div>
+    </div>
     {% block body %}
 
 
