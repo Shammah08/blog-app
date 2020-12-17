@@ -1,32 +1,22 @@
 {% extends 'base.html' %}
 
 {% block body %}
+
+{%for i in post%}
 <br>
-<div class="space" style="margin:5%;"></div>
-<div class="blog" style="height: 600px; margin-left: 30px;">
-    <a href="/create"><button>Create Post</button></a><br>
-    <em>{{save}}</em>
-  {%for i in post%}
-  <div class="content" style="margin-left:25%; width:800px; border: 1px dotted black;">
-    
-      <table style="display: flex;flex: 1; justify-content: space-around;">
-          <tr>
-              <th>Title: {{i[2]}}</th>
-              <th>Author:{{i[1]}} </th>
-              <th>&nbsp;</th>
-              <th style="text-align:right;">Post ID:{{i[0]}}</th>
-          </tr>
-        <tr style="height: max-content;">
-            <td style="width: 600px; font-family: monospace;">{{i[3]}}</td>
-        </tr>
-        <tr>
-            <td>Uploaded on : {{i[4]}}</td>
-           <form action="/edit"><td><button>Edit</button></td></form>
-            <form action="/delete"><td><button>Delete</button></td></form>
-        </tr>  
-        <tr></tr>  
-      </table>
+<div class="container">
+  <h2>Title: {{i[2]|safe}}</h2>
+  <em>Author:{{i[1]}} <br> Posted on : {{i[4]}}</em><br>
+  <small>Post ID: {{i[0]}}</small><br><br>
+  <article style="white-space: pre-wrap; ">{{i[3]}}</article><br>
+  <div style="display: inline;justify-content: space-between;">
+    <a href='/blog/delete/{{i[0]}}'><input type="button" value="Delete" style="display: inline; "
+        class="btn btn-danger"></a>&nbsp;&nbsp;&nbsp;
+    <a href='/blog/edit/{{i[0]}}'><input type="button" value="Edit" style="display: inline;"
+        class="btn btn-primary"></a>
   </div>
-  {%endfor%}
-  <br>
+  <hr >
+</div>
+{%endfor%}
+<br>
 {%endblock%}

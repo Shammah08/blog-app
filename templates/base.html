@@ -1,61 +1,108 @@
 <!DOCTYPE html>
 <html>
-    {% block head %}
-    <head>
-        <title></title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE-edge">
-        <meta name="viewport" content="width=device-width, initial-scale = 1.0">
-        <title>Personal Website</title>
-        <link rel="stylesheet" type="text/css" href="/static/style.css">
-    </head>
-    {% endblock %}  
-    <body>
-        <!--nav-->
-        <nav>
-            <!--logo-->
-            <a href="/home" class='logo'>Lorem Ipsum</a>
-            <!--menu-->
-            <ul>
-                <li><a href="/home">Home</a></li>
-                <li><a href="/login-page">Log In</a></li>
-                <li><a href="/signup-page">Sign Up</a></li>
-                <li><a href="/admin">Admin</a></li>
-                <li><a href="/blog">Blog</a></li>
-                <li><a href="/about" class="active">About</a></li>
-                
+{% block head %}
 
-            </ul>
-            <!--bars-->
-            <div class="toggle">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale = 1.0">
+    <title>Personal Website</title>
+    <!--<link rel="stylesheet" type="text/css" href="/static/style.css">-->
+    <link href="/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+{% endblock %}
 
+<body>
+
+    <nav>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/home">MyApp</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item active">
+                            <a class="nav-link" aria-current="page" href="/blog">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/about">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="/login-page" tabindex="-1"
+                                aria-disabled="true">Connect</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
             </div>
         </nav>
-        {% block body %}
-        
+        <div class="container">
+            <!--nav-->
+            <!--logo-->
+        </div>
+    </nav>
+    <div class="nav-scroller bg-white shadow-sm">
+        <nav class="nav nav-underline" aria-label="Secondary navigation">
+          <a class="nav-link active" aria-current="page" href="#">My App</a>
+          <a class="nav-link" href="#">
+            Friends
+            <span class="badge bg-light text-dark rounded-pill align-text-bottom">27</span>
+          </a>
+          <a class="nav-link" href="#">Explore</a>
+          <a class="nav-link" href="#">Suggestions</a>
+          <a class="nav-link" href="#">Link</a>
+          <a class="nav-link" href="#">Link</a>
+          <a class="nav-link" href="#">Link</a>
+          <a class="nav-link" href="#">Link</a>
+          <a class="nav-link" href="#">Link</a>
+        </nav>
+      </div>
+    {% block body %}
 
-        {% endblock %}
 
-        <footer class="footer">
-            <p>Lorem Ipsum</p>
-            <p class="footer-text">
-                "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
-            </p>
-            <!--social----->
-            <div class="social-icons" >
-                <a href="http://www.instagram.com/steveshammah" target="blank"></a>
-                <a href="http://www.instagram.com/steveshammah" target="blank"></a>
-                <a href="http://www.instagram.com/steveshammah" target="blank"></a>
-                
-            </div>
-            <!--copyright----->
-            <p class="copyright">Copyright by Lorem Ipsum</p>
-        </footer>  
-        <div class="a-social-b" >
-            <a href="https://www.instagram.com/steveshammah"target="blank"></a>
+    {% endblock %}
+
+    <footer class="footer">
+        <p>Lorem Ipsum</p>
+        <p class="footer-text">
+            "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is
+            pain..."
+        </p>
+        <!--social----->
+        <div class="social-icons">
             <a href="http://www.instagram.com/steveshammah" target="blank"></a>
             <a href="http://www.instagram.com/steveshammah" target="blank"></a>
-            
-        </div>    
-    </body>
+            <a href="http://www.instagram.com/steveshammah" target="blank"></a>
+
+        </div>
+        <!--copyright----->
+        <p class="copyright">Copyright by Lorem Ipsum</p>
+    </footer>
+    <div class="a-social-b">
+        <a href="https://www.instagram.com/steveshammah" target="blank"></a>
+        <a href="http://www.instagram.com/steveshammah" target="blank"></a>
+        <a href="http://www.instagram.com/steveshammah" target="blank"></a>
+    </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
 </html>

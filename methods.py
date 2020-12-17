@@ -1,7 +1,7 @@
 from datetime import datetime
 import random
 import hashlib
-from flask import Flask,request,render_template,abort
+from flask import Flask,request,render_template,abort,redirect,url_for
 import mysql.connector
 
 DBCONGIF = {
@@ -10,7 +10,6 @@ DBCONGIF = {
     'password' : 'admin',
     'database' : 'myappDB'
 }
-
 class DbManager():
     def __init__(self,**DBCONGIF)->None:
         self.config = DBCONGIF
@@ -94,13 +93,14 @@ def update_log(update):
     return 'successful log update'
 
 #CREATE POST
-def create_post(author,title,content):
+def create_post(author,title,content)-> None:
     log_details(author,'Create Post')
     with DbManager(**DBCONGIF) as cursor:
         create = '''INSERT INTO post(author, title, content) VALUES (%s,%s,%s)'''
         cursor.execute(create,(author,title,content))
-    return 'POST SAVED SUCCESSFULLY'
-def get_post():
+    
+#GET POST FROM DB
+def get_post() ->'Posts':
     with DbManager(**DBCONGIF) as cursor:
         fetch = '''select * from post order by date DESC '''
         cursor.execute(fetch)
@@ -109,7 +109,22 @@ def get_post():
         for i in range(len(post)):
             all_post.append(post[i])
         return all_post
-            
+
+def  edit_post(id):
+    with DbManager(**DBCONGIF) as cursor:
+        SQL = '''SELECT * FROM post WHERE post_id = %s'''
+        cursor.execute(SQL,(id,))
+        post = cursor.fetchall()
+        content = []
+        for i in post:
+            content.append(i)
+        return content
+
+def delete_post(id):
+    with DbManager(**DBCONGIF) as cursor:
+        delete = '''DELETE FROM post WHERE post_id  = %s'''
+        cursor.execute(delete,(id,))
+        return redirect(url_for('blog'))        
 #generate number and asks user to guess
 def lucky_number(guess):
     my_number = random.randint(1,3)
@@ -154,3 +169,5 @@ def bmi_calc(name: str,weight:int, height:float):
             return f'{name.capitalize()}: Eey you underweight bro --- {bmi}'
         else:
             return f'{name.capitalize()}: Bro you winning at this bmi shit --- {bmi}'
+
+

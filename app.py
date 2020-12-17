@@ -1,14 +1,14 @@
 from flask import Flask, render_template, request, redirect, escape, abort,url_for
-from datetime import datetime
-from methods import *
-import mysql.connector
+from  methods import *
 
 app = Flask(__name__)
-
 """
 Check request method and not GET page when not signed in
 """
 #TEMPLATE ROUTES
+@app.route('/')
+def root():
+    return render_template('about.html')
 #LOGIN PAGE
 @app.route('/login-page')
 def login():
@@ -16,7 +16,8 @@ def login():
 #ABOUT
 @app.route('/about')
 def bio():
-    return render_template('about.html')
+    post = ['steve',"Sam", "Dweet Fi Di Love"]
+    return render_template('edit.html' ,post= post)
 #SIGN UP PAGE
 @app.route('/signup-page')
 def sign():
@@ -40,7 +41,7 @@ def signup():
     password = request.form['password']
     return sign_up(fname,lname,email,password,time_stamp)
 #VIEW BLOG
-@app.route('/')
+
 @app.route('/blog')
 def blog():
     post = get_post()
@@ -50,30 +51,40 @@ def blog():
 def create():
     return render_template('posts.html')
 
-
 @app.route('/home')
 def landing_page():
     return render_template('home.html')
 
-@app.route('/clear',methods = ['POST','GET'])
+@app.route('/clear',methods = ['GET'])
 def clear():
     return render_template('update.html')
 @app.route('/play')
 def play():
     return render_template('play.html')
-
-
 #ACTIONS
 #EDIT POST
-@app.route('/edit')
-def edit_post():
-    post = get_post()
-
-
+@app.route('/blog/edit/<int:id>', methods  = ['GET', 'POST'])
+def edit(id):
+    with DbManager(**DBCONGIF) as cursor:
+        if request.method == 'POST':       
+            author = request.form['author']
+            title = request.form['title']
+            content = request.form['content']
+            SQL = '''UPDATE  post set author = %s, title = %s, content = %s where post_id = %s'''
+            cursor.execute(SQL,(author,title,content,id,))        
+            return  redirect('/blog')
+        else:
+            SQL = '''SELECT * FROM post WHERE post_id = %s'''
+            cursor.execute(SQL,(id,))
+            post = cursor.fetchall()
+            content = []
+            for i in post:
+                content.append(i)
+            return render_template('editpost.html', post = content)
 #DELETE POST
-@app.route('/delete')
-
-    
+@app.route('/blog/delete/<int:id>')
+def delete(id):
+        return delete_post(id)
 
 @app.route('/view-data', methods=['POST'])
 def view_data():
