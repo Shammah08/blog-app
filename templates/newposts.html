@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{%block body%}
+    <div> 
+        <h3>Create A Post.</h2>
+        <p>
+           <em>You got something interesting for the world to see?<br>
+            Free your mind...</em>
+        </p>
+        <form action="/post" method="POST">
+            Author name: <input type="text" name="author" placeholder="Author" required> &nbsp;&nbsp;&nbsp;
+            Post Title: <input type="text" name="title" placeholder="Title" required><br><br>
+            <textarea rows="20" cols="150" name= 'content' placeholder="Free your mind" required></textarea> <br><br>
+            <button class="btn btn-dark" style="margin-left: 770px; width: 150px; ">Post</button>
+        </form>
+       
+        <br>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html'%}
+
+{% block body %}
+<div class="container">
+    <h1>Results for {{keyword}}</h1>
+    <p>
+    <h4> In Authors </h4>
+    {% if authors != [ ] %}
+    {% for author in authors %}
+    {{author}}
+    {% endfor %}
+    {% else %}
+    No results found in Authors
+    {% endif %}
+    </p>
+    <hr>
+    <p>
+    <h4> In Post </h4>
+    {% if posts != [] %}
+    {% for post in posts %}
+    {{post}}
+    <hr>
+    {% endfor %}
+    {% else %}
+    No results found in Posts
+    {% endif %}
+    </p>
+</div>
+
+
+{%endblock%}

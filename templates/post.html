@@ -1,0 +1,25 @@
+{%extends 'base.html'%}
+
+{%block body %}
+<div style="display: inline;">
+    {% for item in content %}
+    <div id="header" style="font-family: monospace;  font-size: 16px; " class="container">
+        <h2 style="text-align:center ;">{{item[2]}}</h2>
+        <div class="form-group">
+            <h5>By: {{item[1]}} </h5>
+            <small>&nbsp;&nbsp;&nbsp;&nbsp;Created on {{item[4]}}&nbsp;&nbsp;
+                ID: {{item[0]}}</small>
+        </div>
+        <article class="form-control" name="content" id="exampleFormControlTextarea1" rows='20'
+            style="white-space: pre-wrap;">{{item[3]}}</article>
+        <form action="/blog/edit/{{item[0]}}" method="POST">
+            <div style="display: flex; justify-content: flex-start; ">
+                <a href='/blog/delete/{{item[0]}}'><input type="button" value="Delete" style="width: 100px; "
+                        class="btn btn-danger"></a>&nbsp;&nbsp;&nbsp;
+                <a href='/blog/edit/{{item[0]}}'><input type="button" value="Edit" style=" width: 100px;"
+                        class="btn btn-primary"></a>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{%endblock%}
