@@ -6,10 +6,18 @@
     <form action="/view-data" method="POST">
 
         Username:<input type="text" name="username" placeholder="Name " class="form-control" required> <br>
-        Password:&nbsp;<input type="password" name="password" class="form-control" placeholder="Password "
-            required><br>
-        <button style="margin-left: 250px;  width: 150px;" class="btn btn-danger">View</button><small style="margin-left: 10px;">This is admin territory</small><br>
-            </form>
+        Password:&nbsp;<input type="password" name="password" class="form-control" placeholder="Password " required><br>
+        {% for item in log_data %}
+        <div class="container">
+
+            <strong style="text-align: center; margin-left: 20px;">ID: {{item[0]}}</strong>
+            <strong style="text-align: center; margin-left: 20px;">{{item[2]}}</strong>&nbsp;&nbsp;&nbsp;
+            <strong style="text-align: center; margin-left: 20px;"> {{item[1]}}</strong>
+        </div>
+        {% endfor %}
+        <small style="margin-left: 200px;">This is admin territory</small>&nbsp;&nbsp;&nbsp;<button
+            style="width: 150px;" class="btn btn-danger">View</button><br>
+    </form>
 </div>
 <div class="data">
     <table style="display: flex; flex: 1;">
@@ -20,4 +28,5 @@
         {% endfor%}
     </table>
 </div>
+<br>
 {% endblock %}

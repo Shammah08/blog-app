@@ -18,7 +18,8 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Home</a>
+        <h3><a class="navbar-brand" href="/">Wakanda Forever</a></h3>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -30,7 +31,7 @@
                     <a class="nav-link" href="/blog">Blog<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/login-page">Login</a>
+                    <a class="nav-link" href="/login">Login</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -49,7 +50,8 @@
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0" action="/search/<keyword>" method="POST">
-                <input class="form-control mr-sm-2" type="search" name="keyword" placeholder="Search Site" aria-label="Search">
+                <input class="form-control mr-sm-2" type="search" name="keyword" placeholder="Search Site"
+                    aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>
@@ -61,38 +63,34 @@
                 All Posts
                 <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{count}}</span>
             </a>
-            <a class="nav-link" href="#">Disabled</a>
-            <a class="nav-link" href="/play">Explore</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="/blog/create" class="float-right"><button style="display: inline; " class="btn btn-light">+Add
-                    Post</button></a>
+            <a class="nav-link" href="/play">Explore</a>
+            <a class="nav-link"
+                href="#">Disabled</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/blog/create" class="float-right"><button style="display: inline; " class="btn btn-light">+Creation</button></a>
         </nav>
     </div>
     {% block body %}
 
-
+    <!--SPECIFIC CONTENT FOR EACH PAGE GOES HERE-->
     {% endblock %}
 
-    <footer class="footer">
-        <p>Lorem Ipsum</p>
-        <p class="footer-text">
-            "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is
-            pain..."
-        </p>
+    <footer class="container">
         <!--social----->
-        <div class="social-icons">
-            <a href="http://www.instagram.com/steveshammah" target="blank"></a>
-            <a href="http://www.instagram.com/steveshammah" target="blank"></a>
-            <a href="http://www.instagram.com/steveshammah" target="blank"></a>
-
+        <div style="text-align: center;">
+            Connect on:
+            <a href="http://www.instagram.com/steveshammah" target="blank">Instagram</a>
+            <a href="https://ke.linkedin.com/in/steve-shammah-252b62191" target="blank">LinkedIn</a>
+            <a href="http://www.twitter.com/steveshammah_" target="blank">Twitter</a>
+            <a href="https://github.com/Shammah08" target="blank">GitHub</a><br><br><br>
+            <p>
+                "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is
+                pain..."
+            </p>
         </div>
+
         <!--copyright----->
-        <p class="copyright">Copyright by Lorem Ipsum</p>
+        <p class="float-right">Copyright by Shammah <small>@2020</small></p>
     </footer>
-    <div class="a-social-b">
-        <a href="https://www.instagram.com/steveshammah" target="blank"></a>
-        <a href="http://www.instagram.com/steveshammah" target="blank"></a>
-        <a href="http://www.instagram.com/steveshammah" target="blank"></a>
-    </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

@@ -2,15 +2,16 @@
 
 {% block body %}
 
-  <h1 style="text-align: center;">Welcome To Wakanda</h1>
-  {%for item in post%}
-  <div>
-  <h3>Title: {{item[2]}}</h3>
+<h3 style="text-align: center;">Welcome To Wakanda</h3>
+{%for item in post%}
+<div class="container">
+  <h4>Title: {{item[2]}}</h4>
   <em>Author: {{item[1]}} <br> Posted on : {{item[4]}}</em><br>
   <small>Post ID: {{item[0]}}</small><br><br>
-  <article style="white-space: pre-wrap; ">{{item[3][0:200]}}...<a href="/blog/{{item[0]}}">Continue Reading</a></article><br>
-  </div>
-  <hr >
+  <article style="white-space: pre-wrap;  ">{{item[3][0:200]}}...<a href="/blog/{{item[0]}}">Continue Reading</a>
+  </article><br>
+  <hr>
+</div>
 {%endfor%}
 </div>
 <br>

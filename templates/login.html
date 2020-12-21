@@ -2,17 +2,19 @@
 
 {% block body %}
 <div class="container">
-     <h2>
-            Proceed to log In!!
+    <br><br>
+     <h2 style="text-align: center;">
+            <strong> Log In!! </strong>
      </h2>
         <form action='/login' method="POST">
             Username:<input type="text" name="username" placeholder="Enter Username" required class="form-control"><br>
             Password:<input type="password" name="password" placeholder="Enter Password" required class="form-control"><br>
+            <strong>{{response}}</strong>
             <button style="margin-left: 300px; width: 200px;"  class="btn btn-secondary">Login</button>
         </form>
         <br>
         <p>
-            Don't have an account? <a href="/signup-page">Sign Up</a> instead.
+            Don't have an account? <a href="/signup">Sign Up</a> instead.
         </p>
     </div>
     

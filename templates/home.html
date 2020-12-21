@@ -2,12 +2,11 @@
 {%block body%}
 <br>
 <main>
-    <h2>My Portfolio</h2>
-    <div class="container" style="height: 500px;">
+    <div style="height: 500px;">
         <p>
-        <h4><strong>{{username}}</strong></h4>
+        <h3><strong> &nbsp;Hi {{username}}</strong></h3>
         </p>
-        <p class="container">
+        <p > &nbsp;
             Nunc placerat ullamcorper ante a maximus. Nulla facilisi.
             Curabitur eu nisl tortor. Sed sit amet iaculis ipsum.
             Nullam tincidunt efficitur arcu, ac malesuada orci mattis eu.
@@ -16,39 +15,45 @@
             Donec id felis eget nisi placerat varius eu et nibh.
             Donec scelerisque eros leo. Mauris sed massa et lectus facilisis varius.
             Nam sit amet elit at eros mollis ullamcorper.
-            Maecenas accumsan sed nulla id placerat.
+            Maecenas accumsan sed nulla id placerat.<br><br>
+            &nbsp; &nbsp; &nbsp;"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is
+            pain..."
+            <br>
+        </p>
 
-        </p><br><br>
-        <em style="color: rgb(0, 0, 0);">Get in touch!</em><br>
+        &nbsp; &nbsp; &nbsp;<em style="color: rgb(0, 0, 0);">Get in touch!</em><br>
         <div class="action" style="display: flex; flex: 1;">
-            <a href="mailto:shammahodhiambo@gmail.com"><button class="btn btn-dark">Send Mail</button></a>&nbsp;&nbsp;
-            <a href="tel:0795058630"><button class="btn btn-info" style="width:100px;">Call</button></a>           
+            &nbsp; &nbsp; &nbsp;<a href="mailto:shammahodhiambo@gmail.com"><button class="btn btn-dark">Send Mail</button></a>&nbsp;&nbsp;
+            <a href="tel:0795058630"><button class="btn btn-info" style="width:100px;">Call</button></a>
         </div><br>
-            <a href="/login-page">Login</a> &nbsp;&nbsp;&nbsp; Don't have an account <a href="/signup-page">Sign Up</a> instead?
+        &nbsp; Proceed to <a href="/login">Login</a>. <br>
+        &nbsp;&nbsp;Don't have an account? <a href="/signup">Sign Up</a> instead.<br>
     </div>
-    <a href="/blog">All post</a><br>
     </div>
+    <br><br>
     <h5 class="border-bottom pb-2 mb-0">Recent post</h5>
-     {% for post in recent %}
-        <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-            <div class="d-flex justify-content-between">
-              <strong class="text-gray-dark">@{{post[1]}}</strong>
-              <a href="/blog/{{post[0]}}">View Post &nbsp;&nbsp;&nbsp; {{post[4]}}</a>
-             
-            </div>
-            <span class="d-block">{{post[2]}}         
-            </span>
-            
-          </div>
-        </div>
-        
-            {% endfor %}
+    
+    {% for post in recent %}
+    <div class="container">
+    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+        <div class="d-flex justify-content-between">
+            <strong class="text-gray-dark">@{{post[1]}}</strong>
+            <a href="/blog/{{post[0]}}">View Post &nbsp;&nbsp;&nbsp; {{post[4]}}</a>
 
-            {{blog}}
         </div>
-        <small class="d-block text-end mt-3">
-            <a href="#">Help</a>
-        </small>
+        <span class="d-block">{{post[2]}}
+        </span>
+    </div>
+    </div>
+    </div>
+
+    {% endfor %}
+
+    {{blog}}
+    </div>
+    <small class="d-block text-end mt-3">
+        <a href="#">Help</a>
+    </small>
     </div>
 </main>
 {%endblock%}

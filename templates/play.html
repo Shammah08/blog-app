@@ -1,107 +1,74 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="container">
-
-    <!--box-1----->
-    <div class="box-1">
-        <form action="/play/search" method="POST">
-            <h5>Search for all letter in a phrase!!</h5><br><br>
-            <table>
-                <tr>
-                    <td>Letter</td>
-                    <td><input type="text" required name="letter" value="aeiuo" class="form-control"></td>
-                </tr>
-                <tr>
-                    <td>Phrase</td>
-                    <td><input type="text" required name="phrase" class="form-control" placeholder="Phrase to Search">
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>{% for item in result %}
+<br><br>
+<div >
+    <ul style="display: grid; grid-template-columns: minmax(2); list-style: none; ">
+        <!--box-1----->
+        <li >
+            <div style="border: 1px solid ; padding: 10px; ">
+                <form action="/play/search" method="POST">
+                    <h5>Search for letters in a phrase!!</h5><br><br>
+                    Letter: <input type="text" required name="letter" value="aeiuo" class="form-control"
+                        style="width: auto;">
+                    Phrase: <input type="text" required name="phrase" class="form-control"
+                        placeholder="Phrase to Search" style="width: auto;">
+                    {% for item in result %}
                     {{item}}
                     {% endfor %}
+                    <br>
+                    <button class="btn btn-primary" style="width: 100px;"> Search</button></td>
+                </form>
+                <br>
+            </div>
+        </li>
+        <li >
+            <!--box-2----->
+            <div style="border: 1px solid ; padding: 10px; ">
+                <h5>Calculate your Basic Metabolic Index...</h5><br>
+                <form action="/play/bmi" method="POST">
+                    Weight: <input type="text" required name="weight" placeholder="in Kgs" class="btn btn-light"
+                        style="width: auto;"><br>
+                    Height: <input type="text" required name="height" placeholder="in M" class="btn btn-light"
+                        style="width: auto;"><br>
+                    <strong>{{bmi}}</strong>
+                    <br>
+                    <input type="text" class="btn btn-dark" placeholder="Enter name" name="name" required>
+                    <br><br>
+                    <button class="btn btn-primary" style="width: 100px;"> BMI</button>
+                </form>
+            </div>
+        </li>
 
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><button class="btn btn-primary"> Search</button></td>
-                </tr>
-            </table>
-        </form>
-    </div><br><br>
-    <!--box-2----->
-    <div class="box-2">
-        <h5>Calculate your Basic Metabolic Index...</h5><br>
-        <form action="/play/bmi" method="POST">
-            <table>
-                <tr>
-                    <td>Weight</td>
-                    <td><input type="text" required name="weight" placeholder="in Kgs" class="btn btn-light"></td>
-                </tr>
-                <tr>
-                    <td>Height</td>
-                    <td><input type="text" required name="height" placeholder="in M" class="btn btn-light"></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>{{bmi}}</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><input type="text" class="btn btn-dark" placeholder="Enter name" name="name" required></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><button class="btn btn-primary"> BMI</button></td>
-                </tr>
+        <li style="flex:1">
+            <!--box-3----->
+            <div style="border: 1px solid ; padding: 10px;">
+                <form action="/play/keygen">
+                    <h5>Generate 16 key code</h5><br>
+                    <input type="text" class="form-control" value="{{key}}" style="width: auto;">
+                    <br>
 
-            </table>
-        </form>
-    </div>
-    <br><br>
-    <!--box-3----->
-    <div class="box-3">
-        <form action="/play/keygen">
-            <h5>Press button to generate 16 key code</h5>
-            <table>
-                <tr>
-                    <td> </td>
-                    <td>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button class="btn btn-primary"> Generate</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Key:&nbsp;&nbsp; </td>
-                    <td ><input type="text" class="form-control" value="{{key}}"></td>
-                    <td>
-                </tr>
-            </table>
-        </form>
-    </div>
-    <br>
-    <div>
-        <h5>
-            I'm thinking of a number between 1 and 5:<br>
-            Are you thinking what i'm thinking!!
-        </h5>
-        <form action="/play/lucky_no" method="GET,POST">
-            <table>
-                <tr>
-                    <td><input type="text" placeholder="Take a guess" name="guess" required class="btn btn-light"></td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="btn btn-primary">Lucky
-                            Number</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{response}}</td>
-                </tr>
-            </table>
-    </div>
+                    <button class="btn btn-primary"> Generate</button>
+                </form>
+            </div>
+        </li>
+
+
+        <li style="flex:1"> 
+            <div style="border: 1px solid ; padding: 10px; ">
+                <h5>
+                    Between 1 and 5:<br>
+                    Are you thinking what i'm thinking!!
+                </h5>
+                <form action="/play/lucky_no" method="GET,POST">
+                    <input type="text" placeholder="Take a guess" name="guess" required class="btn btn-light">
+                    <button class="btn btn-primary">Lucky
+                        Number</button>
+                    {{response}}
+
+            </div>
+        </li>
+    </ul>
 </div>
 
 
