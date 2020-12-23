@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, escape, abort,url_for,session
-from  methods import *
+from methods import *
 import hashlib
 
 app = Flask(__name__)
@@ -10,31 +10,36 @@ app.secret_key = 'MyVerySecretKey'
 #LOGIN PAGE
 @app.route('/')
 @app.route('/login', methods = ['POST','GET'])
-def log():
+def login():
     count = len(get_post())
     if request.method == 'GET':
         return render_template('login.html')
     else:
         username = request.form['username']
         password = request.form['password']
-        response = log_in(username, password)
-        print('This is the response: ', response)
-        session['username'] = username
-        print('Session ni ya uyu mguys' , session['username'])
-        if response == 'Wrong password':
+        response = log_in(username= username, password = password )
+        print(response)
+        if response == 'Wrong password!!':
             return  render_template('login.html',response = response)
-        elif response == 'Username not found':
+        elif response == 'Username not found!!':
             return render_template('login.html', response= response)
         else:
+            session['username'] = username
+            print('Session ni ya uyu mguys', username)
             recent = response
-            #print('response[0]:',recent)
             return render_template('home.html', username = username, recent= recent, count = count)
         
 
 #ADMIN PAGE
 @app.route('/admin')
 def admin():
-    return render_template('admin.html')
+    username = 'admin'
+    session['user']= username
+    if session['user'] == 'admin':
+        status = 'You are logged in as admin'
+        return render_template('admin.html',status = status)
+    else:
+        return abort(401)
 
 @app.route('/signup', methods=['POST','GET'])
 def signup():
@@ -79,7 +84,6 @@ def play():
 @app.route('/search/<keyword>', methods=['POST'])
 def search(keyword):
     keyword = request.form['keyword']
-    print(keyword)
     result = db_search(keyword)
     authors = result[0]
     posts = result[1]

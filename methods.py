@@ -35,7 +35,6 @@ def sign_up(fname:str,lname:str,email:str,username:str,password:str,time= str):
         SQL = '''INSERT INTO users (first_name,last_name, email,username,password) 
         VALUES (%s,%s,%s,%s,%s)'''
         return cursor.execute(SQL,(fname,lname,email,username,password))
-        
 #log in func takes in username and password
 def log_in(username:str,password:str):
      with DbManager(**DBCONGIF) as cursor:
@@ -43,10 +42,12 @@ def log_in(username:str,password:str):
         cursor.execute(LOG_SQL,('LOG IN',username))
         USER_SQL = '''SELECT username, password FROM users  '''
         cursor.execute(USER_SQL)
-        users = cursor.fetchall()
+        users = dict(cursor.fetchall())
         for user in users:
-            if user[0] == username:
-                if  user[1] == hashlib.sha256(password.encode()).hexdigest():
+            if username in users:
+                print('User ndio huyu',username)
+                print('Password ni ii apa',users[username])
+                if  users[username]== hashlib.sha256(password.encode()).hexdigest():
                     blog = get_post()
                     count =  len(blog)
                     recent = []
@@ -55,14 +56,14 @@ def log_in(username:str,password:str):
                             recent.append(v)
                     return recent
                 else:
-                    response = 'Wrong password'
+                    response = 'Wrong password!!'
                     return response
                     break
             else:
-                response = 'Username not found'
+                response = 'Username not found!!'
                 return response
                 break
-
+#log_in('admin',hashlib.sha256('root'.encode()).hexdigest())
 #UPDATE VIEW LOG FUNTION
 def view_log(username,password):
     with DbManager(**DBCONGIF) as cursor:
