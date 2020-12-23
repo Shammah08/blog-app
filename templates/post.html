@@ -11,6 +11,8 @@
     </div>
     <article class="form-control" name="content" id="exampleFormControlTextarea1" rows='20'
         style="white-space: pre-wrap; ">{{item[3]}}</article><br>
+    {% if item[1] == username %}
+  
     <div style="display: flex; justify-content: flex-start; " class="float-right">
         <form action="/blog/edit/{{item[0]}}" method="POST">
             <a href='/blog/delete/{{item[0]}}'><input type="button" value="Delete" style="width: 100px; "
@@ -18,6 +20,7 @@
             <a href='/blog/edit/{{item[0]}}'><input type="button" value="Edit" style=" width: 100px;"
                     class="btn btn-primary"></a>
         </form>
+    {% endif %}
     </div>
     <br><br>
     <div class="comment" style="display: inline;"></div>

@@ -4,19 +4,19 @@ import hashlib
 from flask import Flask,request,render_template,abort,redirect,url_for
 import mysql.connector
 
-DBCONGIF = {
+DBCONFIG = {
     'host': 'localhost',
     'user': 'admin',
     'password' : 'admin',
     'database' : 'myappDB'
 }
 class DbManager():
-    def __init__(self,**DBCONGIF)->None:
-        self.config = DBCONGIF
+    def __init__(self,**DBCONFIG)->None:
+        self.config = DBCONFIG
     
     def __enter__(self)->'cursor':
-        self.conn = mysql.connector.connect(**DBCONGIF)
-        self.cursor = self.conn.cursor()
+        self.conn = mysql.connector.connect(**DBCONFIG)
+        self.cursor = self.conn.cursor(buffered=True)
         return self.cursor
 
     def __exit__(self,arg1,arg2,arg3)->None:
@@ -29,7 +29,7 @@ time_stamp = datetime.now().strftime('%c')
 #activity log func
 #sign_up function to log details in txt file    
 def sign_up(fname:str,lname:str,email:str,username:str,password:str,time= str):
-    with DbManager(**DBCONGIF) as cursor:
+    with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
         cursor.execute(LOG_SQL,('SIGN UP',(username)))
         SQL = '''INSERT INTO users (first_name,last_name, email,username,password) 
@@ -37,7 +37,7 @@ def sign_up(fname:str,lname:str,email:str,username:str,password:str,time= str):
         return cursor.execute(SQL,(fname,lname,email,username,password))
 #log in func takes in username and password
 def log_in(username:str,password:str):
-     with DbManager(**DBCONGIF) as cursor:
+     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
         cursor.execute(LOG_SQL,('LOG IN',username))
         USER_SQL = '''SELECT username, password FROM users  '''
@@ -48,31 +48,32 @@ def log_in(username:str,password:str):
                 print('User ndio huyu',username)
                 print('Password ni ii apa',users[username])
                 if  users[username]== hashlib.sha256(password.encode()).hexdigest():
-                    blog = get_post()
-                    count =  len(blog)
+                    #TO GET  POST WRITTEN BY USERNAME
+                    posts = private_post(username)
+                    count =  len(posts)
                     recent = []
-                    for k,v  in enumerate(blog):
-                        if int(k) <5:
+                    for k,v  in enumerate(posts):
+                        if int(k) <10:
                             recent.append(v)
                     return recent
                 else:
                     response = 'Wrong password!!'
                     return response
                     break
-            else:
-                response = 'Username not found!!'
-                return response
-                break
-#log_in('admin',hashlib.sha256('root'.encode()).hexdigest())
+        else:
+            response = 'Username not found!!'
+            return response
 #UPDATE VIEW LOG FUNTION
 def view_log(username,password):
-    with DbManager(**DBCONGIF) as cursor:
+    with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
         cursor.execute(LOG_SQL,('VIEW LOG',username))
-        
+        USER_SQL = '''SELECT username, password FROM users  '''
+        cursor.execute(USER_SQL)
+        users = dict(cursor.fetchall())
         if username in users:
             if password == users[username]:
-                SQL = '''SELECT * FROM log'''
+                SQL = '''SELECT * FROM log ORDER BY id DESC'''
                 cursor.execute(SQL)
                 log_data = cursor.fetchall()
                 return log_data
@@ -82,25 +83,24 @@ def view_log(username,password):
         else:
             abort(401)
 #FUNCTION TO UPDATE LOG
-#ADD CODE TO CHECK IF ADMIN OR SUPERUSER
-def update_log(update):
-    with open('log.log','w') as vlog:
-        updates = input('New stuff: ')
-        print(f'These are the new updates by admin\n{updates} \nOn: {time_stamp}|', file=vlog,end='\n')
-    return 'successful log update'
-
 #CREATE POST
 def create_post(author,title,content)-> None:
-    with DbManager(**DBCONGIF) as cursor:
+    with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
         cursor.execute(LOG_SQL,('CREATE POST',author))
         SQL = '''INSERT INTO post(author, title, content) VALUES (%s,%s,%s)'''
         return cursor.execute(SQL,(author,title,content))
+
+def private_post(username):
+    with DbManager(**DBCONFIG) as cursor:
+        SQL = """ SELECT * FROM post  WHERE author = %s  ORDER BY date DESC"""
+        cursor.execute(SQL, (username,))
+        return cursor.fetchall()
     
 #GET POST FROM DB
 def get_post() ->'Posts':
     #CHECK USER ID AND RETURN PUBLIC AND ALL USER ID'S POST
-    with DbManager(**DBCONGIF) as cursor:
+    with DbManager(**DBCONFIG) as cursor:
         #LOG ACTION ------FIX
         #LOG_SQL ='''INSERT INTO  log ("GET POST" ,username) VALUES(%s,%s)'''
         SQL = '''SELECT * FROM post ORDER BY date DESC '''
@@ -108,22 +108,33 @@ def get_post() ->'Posts':
         post = cursor.fetchall()
         return post
 
+#ALTER POST STATUS
+def post_privacy(status):
+    with DbManager(**DBCONFIG) as cursor:
+        if status == 'YES':
+            SQL = '''ALTER post SET post_status = 1'''
+            return cursor.execute()
+        elif  status  == 'NO':
+            SQL = 'ALTER post SET post_status = 0'
+            return cursor.execute
+
+#SEARCH FUNCTION
 def db_search(keyword):
-    with DbManager(**DBCONGIF) as cursor:  
+    with DbManager(**DBCONFIG) as cursor:  
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
         cursor.execute(LOG_SQL,('SEARCH',keyword))
         #SQL_POST = """SELECT content FROM  post WHERE content  LIKE '%s%%' """
         #cursor.execute(SQL_POST,keyword)
         #posts = cursor.fetchall()
-        SQL_AUTHORS = """SELECT author FROM post WHERE content LIKE  '' """
-        cursor.execute(SQL_AUTHORS)
+        SQL_AUTHORS = """SELECT author FROM post WHERE content LIKE  '%s%%' """
+        cursor.execute(SQL_AUTHORS,keyword)
         authors = cursor.fetchall()
         return authors
         #pprint.pprint(posts)
         
 
 def  edit_post(id):
-    with DbManager(**DBCONGIF) as cursor:
+    with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
         cursor.execute(LOG_SQL,('EDIT POST',id))
         SQL = '''SELECT * FROM post WHERE post_id  = %s'''
@@ -135,7 +146,7 @@ def  edit_post(id):
         return content
 
 def delete_post(id):
-    with DbManager(**DBCONGIF) as cursor:
+    with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
         cursor.execute(LOG_SQL,('DELETE POST',id))
         delete = '''DELETE FROM post WHERE post_id  = %s'''

@@ -3,31 +3,22 @@
 {% block body %}
 <div class="container">
     <h1>View Logs </h1>
-    <form action="/view-data" method="POST">
-        <strong>{{status}}</strong><br>
-
-        Username:<input type="text" name="username" placeholder="Name " class="form-control" required> <br>
+    <form action="/admin" method="POST">
+        <strong>{{status}}</strong><br><br>
         Password:&nbsp;<input type="password" name="password" class="form-control" placeholder="Password " required><br>
-        {% for item in log_data %}
-        <div class="container">
-
-            <strong style="text-align: center; margin-left: 20px;">ID: {{item[0]}}</strong>
-            <strong style="text-align: center; margin-left: 20px;">{{item[2]}}</strong>&nbsp;&nbsp;&nbsp;
-            <strong style="text-align: center; margin-left: 20px;"> {{item[1]}}</strong>
-        </div>
-        {% endfor %}
+        {{response}}
         <small style="margin-left: 200px;">This is admin territory</small>&nbsp;&nbsp;&nbsp;<button
-            style="width: 150px;" class="btn btn-danger">View</button><br>
+            style="width: 150px;" class="btn btn-danger">View</button><br><br>
     </form>
 </div>
-<div class="data">
-    <table style="display: flex; flex: 1;">
-        {% for item in data %}
-        <tr>
-            <td style="border: 2px solid black; margin : 50%; align-items: center;"> >>>{{item}}</td>
-        </tr>
-        {% endfor%}
-    </table>
+{% for item in log_data %}
+<div class="container">
+    <strong style="text-align: center; margin-left: 40px;">ID: {{item[0]}}</strong>
+    <strong style="text-align: center; margin-left: 60px;">{{item[2]}}</strong>
+    <strong style="text-align: center; margin-left: 60px;"> {{item[1]}}</strong>
+    <strong style="text-align: center; margin-left: 60px;"> {{item[3]}}</strong>
+</div>
+{% endfor %}
 </div>
 <br>
 {% endblock %}

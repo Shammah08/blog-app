@@ -4,14 +4,16 @@
 
 <h3 style="text-align: center;">Welcome To Wakanda</h3>
 {%for item in post%}
-<div class="container">
+
+<div class="container" style="text-align: center;">
   <h4>Title: {{item[2]}}</h4>
   <em>Author: {{item[1]}} <br> Posted on : {{item[4]}}</em><br>
   <small>Post ID: {{item[0]}}</small><br><br>
-  <article style="white-space: pre-wrap;  ">{{item[3][0:200]}}...<a href="/blog/{{item[0]}}">Continue Reading</a>
+  <article style="white-space: pre-wrap;  " class="text-white-50 mb-4">{{item[3][0:200]}}...<a href="/blog/{{item[0]}}">Continue Reading</a>
   </article><br>
   <hr>
 </div>
+
 {%endfor%}
 </div>
 <br>

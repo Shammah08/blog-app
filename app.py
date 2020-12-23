@@ -9,6 +9,10 @@ app.secret_key = 'MyVerySecretKey'
 #TEMPLATE ROUTES
 #LOGIN PAGE
 @app.route('/')
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
 @app.route('/login', methods = ['POST','GET'])
 def login():
     count = len(get_post())
@@ -27,19 +31,31 @@ def login():
             session['username'] = username
             print('Session ni ya uyu mguys', username)
             recent = response
-            return render_template('home.html', username = username, recent= recent, count = count)
+            return render_template('profile.html', username = username, recent= recent, count = count)
         
 
 #ADMIN PAGE
-@app.route('/admin')
+@app.route('/admin', methods = ['POST','GET'])
 def admin():
+    #check session name
     username = 'admin'
     session['user']= username
+    status = f'You are logged in as {username}'
     if session['user'] == 'admin':
-        status = 'You are logged in as admin'
-        return render_template('admin.html',status = status)
+        if request.method == 'GET':
+            return render_template('admin.html',status = status) 
+        else:
+            #give password to viewlog
+            code = request.form['password']
+            password = hashlib.sha256(f'{str(code)}'.encode()).hexdigest()
+            log_data = view_log(username,password)
+            if log_data == 'WRONG PASSWORD!!':
+                return render_template('admin.html', response = log_data, status = status)
+            else:
+                return render_template('admin.html', log_data = log_data,status = status)
     else:
         return abort(401)
+
 
 @app.route('/signup', methods=['POST','GET'])
 def signup():
@@ -59,7 +75,8 @@ def signup():
 def blog():
     post = get_post()
     count = len(post)
-    return render_template('blog.html', post = post, count= count)
+    username = session['username']
+    return render_template('blog.html', post = post, count= count, username = username)
 #CREATE NEW POST
 @app.route('/blog/create',methods= ['GET','POST'])
 def create():
@@ -92,20 +109,22 @@ def search(keyword):
 #GET POST
 @app.route('/blog/<int:id>')
 def post(id):
+    username = session['username']
     count= len(get_post())
-    with DbManager(**DBCONGIF) as cursor:
+    with DbManager(**DBCONFIG) as cursor:
         SQL = '''SELECT * FROM post WHERE post_id = %s'''
         cursor.execute(SQL,(id,))
         post = cursor.fetchall()
         content = []
         for i in post:
             content.append(i)
-    return render_template('post.html' ,content= content, count=count)
+    return render_template('post.html' ,content= content, count=count, username = username)
     #EDIT POST
 @app.route('/blog/edit/<int:id>', methods  = ['GET', 'POST'])
 def edit(id):
+    username = session['username']
     count = len(get_post())
-    with DbManager(**DBCONGIF) as cursor:
+    with DbManager(**DBCONFIG) as cursor:
         if request.method == 'POST':       
             author = request.form['author']
             title = request.form['title']
@@ -115,7 +134,7 @@ def edit(id):
             SQL_2 = '''SELECT * FROM post WHERE post_id = %s '''
             cursor.execute(SQL_2,(id,))
             result = cursor.fetchall()       
-            return render_template('post.html', content= result , count=count)
+            return render_template('post.html', content= result , count=count, username = username)
         else:
             SQL = '''SELECT * FROM post WHERE post_id = %s'''
             cursor.execute(SQL,(id,))
@@ -123,18 +142,11 @@ def edit(id):
             content = []
             for i in post:
                 content.append(i)
-            return render_template('editpost.html', post = content)
+            return render_template('editpost.html', post = content,username = username)
 #DELETE POST
 @app.route('/blog/delete/<int:id>')
 def delete(id):
         return delete_post(id)
-
-@app.route('/view-data', methods=['POST'])
-def view_data():
-    username = request.form['username']
-    password = request.form['password']
-    log_data = view_log(username,password)
-    return render_template('admin.html', log_data = log_data) 
 
 @app.route('/play/search', methods=['POST'])
 def search_letter():
