@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{%block body %}
+<div class="container">
+   
+    <div class="row">
+        {% for user in users %}
+      <div class="col">
+        {{user[4]}}
+      </div>
+      {% endfor %}
+    </div>
+   <br><hr>
+    <div class="row">
+      {% for post in posts %}
+
+        {{post[1]}}
+
+      {% endfor %}
+    </div>
+    <div class="row">
+        Log item:
+        {% for log in logs %}
+        {{log[2]}}
+        {% endfor %}
+      </div>
+    <div class="row">
+        Upload section item:
+        {% for upload in uploads %}
+        {{uploads}}
+        {% endfor %}
+      </div>
+      <div class="row">
+        Comment  section:
+        {% for comment in comments %}
+        {{comment}}
+        {% endfor %}
+      </div>
+      <div class="col">
+        3 of 3
+      </div>
+    </div>
+  {% endblock%}
