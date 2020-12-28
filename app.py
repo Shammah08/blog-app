@@ -13,9 +13,9 @@ app.secret_key = 'MyVerySecretKey'
 def home():
     return render_template('home.html')
 
+#USER AUTH AND LOG IN
 @app.route('/login', methods = ['POST','GET'])
 def login():
-    count = len(get_post())
     if request.method == 'GET':
         return render_template('login.html')
     else:
@@ -29,38 +29,62 @@ def login():
             return render_template('login.html', response= response)
         else:
             session['username'] = username
-            print('Session ni ya uyu mguys', username)
-            recent = response
-            return render_template('profile.html', username = username, recent= recent, count = count)
-        
+            return redirect(url_for('profile'))
+
+@app.route('/profile') 
+def profile():
+    username = session['username']
+    data = user_profile(username)
+    return render_template('profile.html', username = username, recent= data[1], count = data[0],data = data)
 
 #ADMIN PAGE
 @app.route('/admin', methods = ['POST','GET'])
 def admin():
+    title = 'Admin'
     #check session name
-    username = 'admin'
-    session['user']= username
-    status = f'You are logged in as {username}'
-    if session['user'] == 'admin':
+    status = f"You are logged in as {session['user']}"
+    if session['user'] == 'Admin':
         if request.method == 'GET':
-            return render_template('admin.html',status = status) 
+            return render_template('admin.html',status = status, title = title) 
         else:
             #give password to viewlog
             code = request.form['password']
             password = hashlib.sha256(f'{str(code)}'.encode()).hexdigest()
-            log_data = view_log(username,password)
+            log_data = view_log(session['user'],password)
             if log_data == 'WRONG PASSWORD!!':
-                return render_template('admin.html', response = log_data, status = status)
+                return render_template('admin.html', response = log_data, status = status,title = title)
             else:
-                return render_template('admin.html', log_data = log_data,status = status)
+                return render_template('admin.html', log_data = log_data,status = status, title = title)
     else:
         return abort(401)
+
+@app.route('/adminpanel')
+def admin_panel():
+    title = 'Admin Panel'
+    with DbManager(**DBCONFIG) as cursor:
+        USERS_SQL = '''SELECT * FROM users'''
+        cursor.execute(USERS_SQL)
+        users = cursor.fetchall()
+        COMMENT_SQL = '''SELECT * FROM comments'''
+        cursor.execute(COMMENT_SQL)
+        comments = cursor.fetchall()
+        LOG_SQL = '''SELECT * FROM log'''
+        cursor.execute(LOG_SQL)
+        logs = cursor.fetchall()
+        POST_SQL = '''SELECT * FROM post'''
+        cursor.execute(POST_SQL)
+        posts = cursor.fetchall()
+        UPLOAD_SQL = '''SELECT * FROM uploads '''
+        cursor.execute(UPLOAD_SQL)
+        uploads = cursor.fetchall()
+        return render_template('adminpanel.html',users= users,comments = comments, logs = logs, posts = posts, uploads = uploads, title = title)
 
 
 @app.route('/signup', methods=['POST','GET'])
 def signup():
+    title = 'Signup'
     if request.method == 'GET':
-        return render_template('signup.html')   
+        return render_template('signup.html', title = title)   
     else:
         fname  = request.form['fname']
         lname = request.form['lname']
@@ -69,19 +93,21 @@ def signup():
         password = request.form['password']
         code = hashlib.sha256(f'{str(password)}'.encode()).hexdigest()
         sign_up(fname,lname,email,username,code)
-        return redirect(url_for('blog'))
+        return redirect(url_for('profile'))
 #VIEW BLOG
 @app.route('/blog')
 def blog():
-    post = get_post()
+    title = 'Blog'
+    post = get_all_posts()
     count = len(post)
     username = session['username']
-    return render_template('blog.html', post = post, count= count, username = username)
+    return render_template('blog.html', post = post, count= count, username = username, title = title)
 #CREATE NEW POST
 @app.route('/blog/create',methods= ['GET','POST'])
 def create():
+    title = 'New Post'
     if request.method == 'GET':
-        return render_template('newposts.html')
+        return render_template('newposts.html',title = title)
     else:
         author = request.form['author']
         title = request.form['title']
@@ -95,22 +121,25 @@ def clear():
     return render_template('update.html')
 @app.route('/play')
 def play():
-    return render_template('play.html')
+    title = 'Play'
+    return render_template('play.html', title = title)
 #ACTIONS
 #SEARCH APP
 @app.route('/search/<keyword>', methods=['POST'])
 def search(keyword):
+    title = f'Results for {keyword}'
     keyword = request.form['keyword']
     result = db_search(keyword)
     authors = result[0]
     posts = result[1]
-    return render_template('result.html' ,authors = authors, posts = posts, keyword= keyword)
+    return render_template('result.html' ,authors = authors, posts = posts, keyword= keyword,title = title)
 
 #GET POST
 @app.route('/blog/<int:id>')
 def post(id):
+    title  = ' '
     username = session['username']
-    count= len(get_post())
+    count= len(get_all_posts())
     with DbManager(**DBCONFIG) as cursor:
         SQL = '''SELECT * FROM post WHERE post_id = %s'''
         cursor.execute(SQL,(id,))
@@ -123,7 +152,7 @@ def post(id):
 @app.route('/blog/edit/<int:id>', methods  = ['GET', 'POST'])
 def edit(id):
     username = session['username']
-    count = len(get_post())
+    count = len(get_all_posts())
     with DbManager(**DBCONFIG) as cursor:
         if request.method == 'POST':       
             author = request.form['author']

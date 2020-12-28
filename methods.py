@@ -48,14 +48,10 @@ def log_in(username:str,password:str):
                 print('User ndio huyu',username)
                 print('Password ni ii apa',users[username])
                 if  users[username]== hashlib.sha256(password.encode()).hexdigest():
-                    #TO GET  POST WRITTEN BY USERNAME
-                    posts = private_post(username)
-                    count =  len(posts)
-                    recent = []
-                    for k,v  in enumerate(posts):
-                        if int(k) <10:
-                            recent.append(v)
-                    return recent
+                    SQL = '''SELECT * FROM post WHERE author  = %s'''
+                    posts = cursor.execute(SQL, (username,))
+                    return posts
+                #TO GET  POST WRITTEN BY USERNAME
                 else:
                     response = 'Wrong password!!'
                     return response
@@ -63,6 +59,25 @@ def log_in(username:str,password:str):
         else:
             response = 'Username not found!!'
             return response
+#FIX THIS SECTION
+def user_profile(username):
+    with DbManager(**DBCONFIG) as cursor:
+        #NEEDS WORK
+        SQL = '''SELECT * FROM post WHERE author = %s'''
+        post = cursor.execute(SQL,(username,))
+        
+        #SQL_1 = '''SELECT * FROM post WHERE post_status = %s'''
+        #user_details = cursor.execute()
+        count = len(get_all_posts())
+    allposts = private_post(username)
+    #count =  len(allposts)
+    recent = []
+    for k,v  in enumerate(allposts):
+        if int(k) <10:
+            recent.append(v)
+    data = [count,recent, allposts]
+    return data
+
 #UPDATE VIEW LOG FUNTION
 def view_log(username,password):
     with DbManager(**DBCONFIG) as cursor:
@@ -82,7 +97,7 @@ def view_log(username,password):
                 return response
         else:
             abort(401)
-#FUNCTION TO UPDATE LOG
+
 #CREATE POST
 def create_post(author,title,content)-> None:
     with DbManager(**DBCONFIG) as cursor:
@@ -98,7 +113,7 @@ def private_post(username):
         return cursor.fetchall()
     
 #GET POST FROM DB
-def get_post() ->'Posts':
+def get_all_posts() ->'Posts':
     #CHECK USER ID AND RETURN PUBLIC AND ALL USER ID'S POST
     with DbManager(**DBCONFIG) as cursor:
         #LOG ACTION ------FIX
@@ -109,6 +124,7 @@ def get_post() ->'Posts':
         return post
 
 #ALTER POST STATUS
+#Add functionality to front end
 def post_privacy(status):
     with DbManager(**DBCONFIG) as cursor:
         if status == 'YES':
@@ -195,7 +211,7 @@ def bmi_calc(name: str,weight:int, height:float):
 
 
 
-'''post = get_post()
+'''post = get_all_posts()
 date = post[0][4] 
 
 print(datetime.strftime(date,'%c'))

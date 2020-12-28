@@ -1,8 +1,9 @@
 {%extends 'base.html'%}
+
 {%block body%}
 <br>
 <main>
-    <div style="height: 500px;">
+    <div style="height: 450px;">
         <p>
         <h3><strong> &nbsp;Hi {{username}}</strong></h3>
         </p>
@@ -25,31 +26,29 @@
         <div class="action" style="display: flex; flex: 1;">
             &nbsp; &nbsp; &nbsp;<a href="mailto:shammahodhiambo@gmail.com"><button class="btn btn-dark">Send Mail</button></a>&nbsp;&nbsp;
             <a href="tel:0795058630"><button class="btn btn-info" style="width:100px;">Call</button></a>
-        </div><br>
-        &nbsp; Proceed to <a href="/login">Login</a>. <br>
-        &nbsp;&nbsp;Don't have an account? <a href="/signup">Sign Up</a> instead.<br>
+        </div>
     </div>
-    </div>
-    <br><br>
-    <h5 class="border-bottom pb-2 mb-0">Recent post</h5>
-    
-    {% for post in recent %}
+</div>
+    <h5 class="border-bottom pb-2 mb-0">My Recent Posts</h5>
+    {% for post in data[1] %}
+    <a href="/blog/{{post[0]}}" style="text-decoration: none;">
     <div class="container">
     <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
         <div class="d-flex justify-content-between">
             <strong class="text-gray-dark">@{{post[1]}}</strong>
-            <a href="/blog/{{post[0]}}">View Post &nbsp;&nbsp;&nbsp; {{post[4]}}</a>
+            View Post &nbsp;&nbsp;&nbsp; {{post[4]}}
 
         </div>
         <span class="d-block">{{post[2]}}
         </span>
     </div>
     </div>
+</a>
     </div>
 
     {% endfor %}
-
     {{blog}}
+
     </div>
     <small class="d-block text-end mt-3">
         <a href="#">Help</a>

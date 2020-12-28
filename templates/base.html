@@ -28,10 +28,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/blog">Blog<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/profile">Profile<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
+                    <a class="nav-link" href="https://www.instagram.com/steveshammah" target="blank">Social</a>
+                  
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -39,15 +40,15 @@
                         More!!
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="https://www.instagram.com/steveshammah" target="blank">Social</a>
+                        <a class="dropdown-item" href="/signup">Signup</a>
+                        <a class="dropdown-item" href="/logout">Logout</a>
                         <a class="dropdown-item" href="/admin">Admin</a>
+                       
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Contact Support</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
-                </li>
+               
             </ul>
             <form class="form-inline my-2 my-lg-0" action="/search/<keyword>" method="POST">
                 <input class="form-control mr-sm-2" type="search" name="keyword" placeholder="Search Site"
@@ -57,6 +58,7 @@
         </div>
     </nav>
     </nav>
+    <div class="container">
     <div class="nav-scroller bg-white shadow-sm">
         <nav class="nav nav-underline" aria-label="Secondary navigation">
             <a class="nav-link" href="/blog">
@@ -64,11 +66,11 @@
                 <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{count}}</span>
             </a>
             <a class="nav-link" href="/play">Explore</a>
-            <a class="nav-link"
-                href="#">Disabled</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="/blog/create" class="float-right"><button style="display: inline; " class="btn btn-light">+Creation</button></a>
         </nav>
+        <a href="/blog/create" class="float-right"><button style="display: inline; " class="btn btn-light">+Creation</button></a>
     </div>
+</div>
+<br>
     {% block body %}
 
     <!--SPECIFIC CONTENT FOR EACH PAGE GOES HERE-->
