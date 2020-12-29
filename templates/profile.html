@@ -1,55 +1,63 @@
 {%extends 'base.html'%}
 
 {%block body%}
-<br>
 <main>
     <div style="height: 450px;">
         <p>
+            <a href="/settings" class="float-right"><button class="btn btn-info" style="width:100px;">Settings</button></a>
         <h3><strong> &nbsp;Hi {{username}}</strong></h3>
+        
         </p>
-        <p > &nbsp;
-            Nunc placerat ullamcorper ante a maximus. Nulla facilisi.
-            Curabitur eu nisl tortor. Sed sit amet iaculis ipsum.
-            Nullam tincidunt efficitur arcu, ac malesuada orci mattis eu.
-            Donec venenatis non nibh eget porttitor.
-            Vivamus accumsan leo nec sem consectetur aliquet.
-            Donec id felis eget nisi placerat varius eu et nibh.
-            Donec scelerisque eros leo. Mauris sed massa et lectus facilisis varius.
-            Nam sit amet elit at eros mollis ullamcorper.
-            Maecenas accumsan sed nulla id placerat.<br><br>
-            &nbsp; &nbsp; &nbsp;"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is
-            pain..."
-            <br>
+        <p >{% for data in profile %} 
+            
+        {{data[7]}}
+        
+        {% endfor %}
         </p>
-
+       
         &nbsp; &nbsp; &nbsp;<em style="color: rgb(0, 0, 0);">Get in touch!</em><br>
         <div class="action" style="display: flex; flex: 1;">
             &nbsp; &nbsp; &nbsp;<a href="mailto:shammahodhiambo@gmail.com"><button class="btn btn-dark">Send Mail</button></a>&nbsp;&nbsp;
             <a href="tel:0795058630"><button class="btn btn-info" style="width:100px;">Call</button></a>
-        </div>
+           </div>
+           
     </div>
 </div>
     <h5 class="border-bottom pb-2 mb-0">My Recent Posts</h5>
     {% for post in data[1] %}
-    <a href="/blog/{{post[0]}}" style="text-decoration: none;">
     <div class="container">
     <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
         <div class="d-flex justify-content-between">
-            <strong class="text-gray-dark">@{{post[1]}}</strong>
-            View Post &nbsp;&nbsp;&nbsp; {{post[4]}}
+            <a href="/blog/{{post[0]}}" style="text-decoration: none;">
+            <strong class="text-gray-dark">{{post[2]}}</strong> <!-- Username-->
+            <span class="d-block">  {{post[4]}}<!-- Time-->
 
         </div>
-        <span class="d-block">{{post[2]}}
+       <!--  {{post[2]}}Post Title--></a>
         </span>
     </div>
     </div>
-</a>
     </div>
 
     {% endfor %}
-    {{blog}}
-
     </div>
+    
+    <div class="my-3 p-3 bg-white rounded shadow-sm">
+        <h6 class="border-bottom border-gray pb-2 mb-0">All Authors</h6>
+        {% for author in data[3] %}
+        <div class="media text-muted pt-3">
+          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <div class="d-flex justify-content-between align-items-center w-100">
+              <strong class="text-gray-dark">{{author[0]}} {{author[1]}} </strong>
+              <a href="#">Follow</a>
+            </div>
+            <a href="#"><span class="d-block">@{{author[2]}}</span></a>
+          </div>
+        </div>
+        {% endfor%}
+    </div>
+    
     <small class="d-block text-end mt-3">
         <a href="#">Help</a>
     </small>

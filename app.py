@@ -22,7 +22,6 @@ def login():
         username = request.form['username']
         password = request.form['password']
         response = log_in(username= username, password = password )
-        print(response)
         if response == 'Wrong password!!':
             return  render_template('login.html',response = response)
         elif response == 'Username not found!!':
@@ -31,26 +30,34 @@ def login():
             session['username'] = username
             return redirect(url_for('profile'))
 
+@app.route('/logout')
+def log_out():
+    username = session['username']
+    session.pop('username',None)
+    return redirect('login')
+
 @app.route('/profile') 
 def profile():
+    title = 'My Profile'
     username = session['username']
+    profile = profile_data(username)
     data = user_profile(username)
-    return render_template('profile.html', username = username, recent= data[1], count = data[0],data = data)
+    return render_template('profile.html', profile=profile,username = username, recent= data[1], count = data[0],title = title,data = data)
 
 #ADMIN PAGE
 @app.route('/admin', methods = ['POST','GET'])
 def admin():
     title = 'Admin'
     #check session name
-    status = f"You are logged in as {session['user']}"
-    if session['user'] == 'Admin':
+    status = f"You are logged in as {session['username']}"
+    if session['username'] == 'Admin':
         if request.method == 'GET':
             return render_template('admin.html',status = status, title = title) 
         else:
             #give password to viewlog
             code = request.form['password']
             password = hashlib.sha256(f'{str(code)}'.encode()).hexdigest()
-            log_data = view_log(session['user'],password)
+            log_data = view_log(session['username'],password)
             if log_data == 'WRONG PASSWORD!!':
                 return render_template('admin.html', response = log_data, status = status,title = title)
             else:
@@ -93,8 +100,25 @@ def signup():
         password = request.form['password']
         code = hashlib.sha256(f'{str(password)}'.encode()).hexdigest()
         sign_up(fname,lname,email,username,code)
-        return redirect(url_for('profile'))
+        session['username']=username
+        return redirect(url_for('settings'))
 #VIEW BLOG
+@app.route('/settings',methods = ['POST', 'GET'])
+def setting():
+    username= session['username']
+    if request.method == 'GET':
+        data = profile_data(username)
+        return render_template('settings.html', data = data)
+    else:
+        first_name = request.form['fname']
+        last_name = request.form['lname']
+        email= request.form['email']
+        uname = request.form['username']
+        about = request.form['about']
+        edit_profile(username,first_name,last_name,email,uname,about)
+        data = profile_data(username)
+        status = 'Update Successful!!'
+        return render_template('settings.html',data=data, status = status)
 @app.route('/blog')
 def blog():
     title = 'Blog'
@@ -115,6 +139,9 @@ def create():
         create_post(author,title,content)
         return redirect(url_for('blog'))
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/clear',methods = ['GET'])
 def clear():
@@ -158,7 +185,7 @@ def edit(id):
             author = request.form['author']
             title = request.form['title']
             content = request.form['content']
-            SQL = '''UPDATE  post SET author = %s, title = %s, content = %s where post_id = %s'''
+            SQL = '''UPDATE  post SET author = %s, title = %s, content = %s WHERE post_id = %s'''
             cursor.execute(SQL,(author,title,content,id,)) 
             SQL_2 = '''SELECT * FROM post WHERE post_id = %s '''
             cursor.execute(SQL_2,(id,))

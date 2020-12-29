@@ -45,8 +45,6 @@ def log_in(username:str,password:str):
         users = dict(cursor.fetchall())
         for user in users:
             if username in users:
-                print('User ndio huyu',username)
-                print('Password ni ii apa',users[username])
                 if  users[username]== hashlib.sha256(password.encode()).hexdigest():
                     SQL = '''SELECT * FROM post WHERE author  = %s'''
                     posts = cursor.execute(SQL, (username,))
@@ -63,21 +61,33 @@ def log_in(username:str,password:str):
 def user_profile(username):
     with DbManager(**DBCONFIG) as cursor:
         #NEEDS WORK
-        SQL = '''SELECT * FROM post WHERE author = %s'''
-        post = cursor.execute(SQL,(username,))
+        AUTHORS_SQL = '''SELECT DISTINCT  first_name, last_name, username FROM users'''
+        cursor.execute(AUTHORS_SQL)
+        authors = cursor.fetchall()
         
         #SQL_1 = '''SELECT * FROM post WHERE post_status = %s'''
         #user_details = cursor.execute()
-        count = len(get_all_posts())
-    allposts = private_post(username)
+    count = len(get_all_posts())        #GET NUMBER OF ALL POSTS IN DB
+    allposts = private_post(username)           #GET ALL 
     #count =  len(allposts)
     recent = []
     for k,v  in enumerate(allposts):
         if int(k) <10:
             recent.append(v)
-    data = [count,recent, allposts]
+    data = [count,recent, allposts, authors]
     return data
 
+def profile_data(username):
+    with DbManager(**DBCONFIG) as cursor:
+        PROFILE_SQL = '''SELECT * FROM users WHERE username = %s'''
+        cursor.execute(PROFILE_SQL, (username,))
+        return cursor.fetchall()
+
+def edit_profile(username,first_name,last_name,email,uname,about):
+    with DbManager(**DBCONFIG) as cursor:
+        PROFILE_SQL = '''UPDATE users SET first_name = %s, last_name = %s,
+        email = %s, username = %s, about = %s  WHERE username = %s '''
+        return cursor.execute(PROFILE_SQL,(first_name,last_name,email,uname, about,username))
 #UPDATE VIEW LOG FUNTION
 def view_log(username,password):
     with DbManager(**DBCONFIG) as cursor:
@@ -135,6 +145,7 @@ def post_privacy(status):
             return cursor.execute
 
 #SEARCH FUNCTION
+# FIX BUG 
 def db_search(keyword):
     with DbManager(**DBCONFIG) as cursor:  
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
@@ -146,7 +157,6 @@ def db_search(keyword):
         cursor.execute(SQL_AUTHORS,keyword)
         authors = cursor.fetchall()
         return authors
-        #pprint.pprint(posts)
         
 
 def  edit_post(id):
