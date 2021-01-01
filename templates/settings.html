@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<strong>{{status}}</strong>
+<h2><strong>Profile Settings</strong></h2><br>
+
+{% for setting in data %}
+<div class="col-md-8 order-md-1">
+    <form action="/settings" method="POST">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                First name
+                <input type="text" class="form-control" name="fname" value="{{setting[1]}}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="lastName">Last name</label>
+                <input type="text" class="form-control" id="lastName" name="lname" value="{{setting[2]}}">
+            </div>
+        </div>
+
+</div>
+<div class="col-md-8 order-md-1">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{setting[4]}}">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{setting[3]}}">
+        </div>
+        <!-- <div class="col-md-6 mb-3">
+             <label for="password">Password</label>
+             <input type="password" class="form-control" id="password" placeholder="" value="{{setting[5]}}" required>
+           </div>-->
+    </div>
+    <br>
+
+    <section>
+        <h3>About</h3>
+        <textarea rows="10" cols="50" name='about' style="white-space: pre-wrap;">
+                {{setting[7]}}
+             </textarea>
+    </section>
+    <br>
+    <div class="contact-me">
+        <div class="col-md-6 mb-3">
+            <h3><label for="Social Media">Social Media</label></h3>
+            <input type="text" class="form-control" id="Instagram" placeholder="Instagram" value=""><br>
+            <input type="text" class="form-control" id="GitHub" placeholder="GitHub" value=""><br>
+            <input type="text" class="form-control" id="LinkedIn" placeholder="LinkedIn" value=""><br>
+            <input type="text" class="form-control" id="Facebook" placeholder="Facebook" value=""><br>
+        </div>
+    </div>
+    <input type="submit" class="btn btn-dark" value="Edit Profile">
+    </form>
+    <br>
+</div>
+{% endfor %}
+<hr><br>
+<div class="container">
+    <h3> Profile Deactivation</h3>
+    {% for name in data %}
+    <strong>{{name[1]}} {{name[2]}}</strong>
+    {% endfor %}<br>
+    Would you like to delete your profile?
+    <form action="#">
+        <input type="password" name='password' class="form-control" style="width: 300px;" placeholder="Enter password"
+            required><br>
+        Are you sure? &nbsp;&nbsp;<input type="checkbox"><br>
+        <input type="button" class="btn btn-danger" value="Delete Account" style="width: 200px;">
+    </form><br>
+    <em>Be careful. The action once complete cannot be undone.</em><br>
+    <em>Sucks to see you leave.</em>
+    <br>
+</div>
+<hr><br>
+{% endblock %}
