@@ -17,6 +17,7 @@ def home():
 @app.route('/login', methods = ['POST','GET'])
 def login():
     if request.method == 'GET':
+        session.pop('username',None)
         return render_template('login.html')
     else:
         username = request.form['username']
@@ -27,43 +28,71 @@ def login():
         elif response == 'Username not found!!':
             return render_template('login.html', response= response)
         else:
+            #SUCCESSFUL LOGIN
             session['username'] = username
+            
             return redirect(url_for('profile'))
 
 @app.route('/logout')
 def log_out():
-    username = session['username']
-    session.pop('username',None)
-    return redirect('login')
-
+    title = 'Logout'
+    try:
+        username = session['username']
+        session.pop('username',None)
+        return redirect('login')
+    except KeyError:
+        return render_template('error.html',title = title)
+#VISIT OWN PROFILE
 @app.route('/profile') 
 def profile():
     title = 'My Profile'
-    username = session['username']
-    profile = profile_data(username)
-    data = user_profile(username)
-    return render_template('profile.html', profile=profile,username = username, recent= data[1], count = data[0],title = title,data = data)
-
+    try:
+        username = session['username']
+        profile = profile_data(username)
+        data = user_profile(username)
+        return render_template('profile.html', profile=profile,username = username, count = data[0],title = title,data = data)
+    except KeyError:
+        return render_template('error.html',title= title)
+#VISIT ANY USERS PROFILE AS GUEST
+@app.route('/profile/<username>/guest')
+def guest_profile(username):
+    try:
+        current_name = session['username']
+        if current_name != username:
+            #PERSON- BEING REQUESTED
+            profile = profile_data(username)
+            print(profile)
+            data = user_profile(username)
+            print('This executed')
+            title = username
+            return render_template('profile.html', profile=profile,username = username, count = data[0],title = title,data = data)
+    except KeyError:
+        title = username
+        return render_template('error.html',title= title)
 #ADMIN PAGE
 @app.route('/admin', methods = ['POST','GET'])
 def admin():
-    title = 'Admin'
-    #check session name
-    status = f"You are logged in as {session['username']}"
-    if session['username'] == 'Admin':
-        if request.method == 'GET':
-            return render_template('admin.html',status = status, title = title) 
-        else:
-            #give password to viewlog
-            code = request.form['password']
-            password = hashlib.sha256(f'{str(code)}'.encode()).hexdigest()
-            log_data = view_log(session['username'],password)
-            if log_data == 'WRONG PASSWORD!!':
-                return render_template('admin.html', response = log_data, status = status,title = title)
+    title = 'Administration'
+    try:
+        #check session name
+        status = f"You are logged in as {session['username']}"
+        if session['username'] == 'Admin':
+            if request.method == 'GET':
+                return render_template('admin.html',status = status, title = title) 
             else:
-                return render_template('admin.html', log_data = log_data,status = status, title = title)
-    else:
-        return abort(401)
+                #give password to viewlog
+                code = request.form['password']
+                password = hashlib.sha256(f'{str(code)}'.encode()).hexdigest()
+                log_data = view_log(session['username'],password)
+                if log_data == 'WRONG PASSWORD!!':
+                    return render_template('admin.html', response = log_data, status = status,title = title)
+                else:
+                    return render_template('admin.html', log_data = log_data,status = status, title = title)
+        else:
+            #standard user error
+            return abort(401)
+    except KeyError:
+        return render_template('error.html',title = title)
 
 @app.route('/adminpanel')
 def admin_panel():
@@ -101,8 +130,8 @@ def signup():
         code = hashlib.sha256(f'{str(password)}'.encode()).hexdigest()
         sign_up(fname,lname,email,username,code)
         session['username']=username
-        return redirect(url_for('settings'))
-#VIEW BLOG
+        return redirect(url_for('setting'))
+
 @app.route('/settings',methods = ['POST', 'GET'])
 def setting():
     username= session['username']
@@ -122,10 +151,13 @@ def setting():
 @app.route('/blog')
 def blog():
     title = 'Blog'
-    post = get_all_posts()
-    count = len(post)
-    username = session['username']
-    return render_template('blog.html', post = post, count= count, username = username, title = title)
+    try:
+        post = get_all_posts()
+        count = len(post)
+        username = session['username']
+        return render_template('blog.html', post = post, count= count, username = username, title = title)
+    except KeyError:
+        return render_template('error.html', title = title)
 #CREATE NEW POST
 @app.route('/blog/create',methods= ['GET','POST'])
 def create():
@@ -164,17 +196,15 @@ def search(keyword):
 #GET POST
 @app.route('/blog/<int:id>')
 def post(id):
-    title  = ' '
     username = session['username']
     count= len(get_all_posts())
     with DbManager(**DBCONFIG) as cursor:
         SQL = '''SELECT * FROM post WHERE post_id = %s'''
         cursor.execute(SQL,(id,))
-        post = cursor.fetchall()
-        content = []
-        for i in post:
-            content.append(i)
-    return render_template('post.html' ,content= content, count=count, username = username)
+        content = cursor.fetchall()
+        title = content[0][2]
+        status = 'NO'
+        return render_template('post.html' ,content= content, count=count, username = username,title = title,status = status)
     #EDIT POST
 @app.route('/blog/edit/<int:id>', methods  = ['GET', 'POST'])
 def edit(id):

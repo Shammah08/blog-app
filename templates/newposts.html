@@ -1,17 +1,15 @@
 {% extends 'base.html' %}
 
 {%block body%}
-    <div> 
-        <h3>Create.</h2>
-        <p>
-           <em>You got something interesting for the world to see?<br>
-            Free your mind...</em>
-        </p>
+    <div style="margin-left: 2vh;"> 
         <form action="/blog/create" method="POST">
-            Author name: <input type="text" name="author" placeholder="Author" required> &nbsp;&nbsp;&nbsp;
-            Post Title: <input type="text" name="title" placeholder="Title" required><br><br>
-            <textarea rows="20" cols="150" name= 'content' placeholder="Free your mind" required></textarea> <br><br>
-            <input type="file" name="post-photo" ><button class="btn btn-dark" style="margin-left: 770px; width: 150px; ">Post</button>
+            Author: <input type="text" name="author" placeholder="Author" required> <br><br>
+            Title: &nbsp;&nbsp;&nbsp;<input type="text" name="title" placeholder="Title" required><br><br>
+            <textarea rows="20" cols="80" name= 'content' placeholder="Free your mind" required></textarea><br>
+            <div style="margin-left: 300px">
+                <strong>Private: </strong><input type="text" name="privacy" value="NO" class="form-control" style="width: 80px;">
+            </div> <br><br>
+            <input type="file" name="post-photo" ><button class="btn btn-dark" style="margin-left: 300px; width: 150px; ">Post</button>
         </form>
        
         <br>

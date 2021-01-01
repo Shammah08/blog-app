@@ -12,20 +12,22 @@
     <article class="form-control" name="content" id="exampleFormControlTextarea1" rows='20'
         style="white-space: pre-wrap; ">{{item[3]}}</article><br>
     {% if item[1] == username %}
-  
+    <em>Private:</em> <strong>{{status}}</strong>
     <div style="display: flex; justify-content: flex-start; " class="float-right">
         <form action="/blog/edit/{{item[0]}}" method="POST">
             <a href='/blog/delete/{{item[0]}}'><input type="button" value="Delete" style="width: 100px; "
                     class="btn btn-danger"></a>&nbsp;&nbsp;&nbsp;
             <a href='/blog/edit/{{item[0]}}'><input type="button" value="Edit" style=" width: 100px;"
-                    class="btn btn-primary"></a>
+                    class="btn btn-primary"></a><br><br>
+          
         </form>
-    {% endif %}
+        {% endif %}
     </div>
     <br><br>
     <div class="comment" style="display: inline;"></div>
     <form action="" style="text-align: center;">
-        <textarea  placeholder="Add comment"  rows="2" cols="auto" name= "comment" style="display: inline; border: none; font-size: 12px;"></textarea>
+        <textarea placeholder="Add comment" rows="2" cols="auto" name="comment"
+            style="display: inline; border: none; font-size: 12px;"></textarea>
         <input type="submit" style="border: none; display: inline;" class="btn btn-light" value="Comment">
     </form><br><br><br>
     {% endfor %}

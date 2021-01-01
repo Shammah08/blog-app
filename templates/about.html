@@ -1,13 +1,6 @@
 {% extends 'base.html' %}
 
 {% block body %}
-           <!--model-->
-            <img src="/templates/profile.jpg" class="model" alt="MODEL PHOTO">
-        <!--about-section-->
-        <div class="about-container">
-            <!--img----->
-            <img src="/templates/‪profile.jpg" class="mini-profile" alt="COOL PHOTO">
-            <!--about-text----->
             <div class="about-text">
                 <p>About Me</p>
                 <p>Lorem Ipsum</p>
@@ -15,60 +8,41 @@
                     "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
                     </p>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et laoreet elit. Phasellus vitae purus scelerisque, porttitor sapien sit amet, vestibulum tortor. 
-                        </p><br>
-
-                        <div class = "action" style="display: flex; flex: 1; justify-content: space-between;">
-                            <form action="/signup-page">
-                                <button >Sign Up</button>
-                            </form> 
-                            <form action="/login-page">
-                                <button>Log In</button>
-                            </form>     
-        
-                        </div>
-                        
-                
+                        </p>
+                        <p>"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
+                            "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
+                        </p>
+                        <br><br>
             </div>
 
         </div>
-        <!--services-------->
-        <div class="services">
-            <div class="services-text">
-                <p>Service</p>
-                <p>Lorem Ipsum</p>
-                <p>"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
-                    "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
-                </p>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras feugiat mi eget porta ultrices. Ut.
-                </p>
-                
-            </div>
-            <div class="box-container">
+            <div class="container" style="display: grid; grid-column: 3; justify-content: space-around;">
                 <!--box-1----->
-                <div class="box-1" >
+                <ul>
+                <li><div style="">
                     <span>1</span>
                     <p>Lorem Ipsum</p>
                     <p>who seeks after it and wants to have it</p>
                     <p><em>Lorem Ipsum</em></p>
                     <button> Read More</button>
-                </div>
+                </div></li>
                 <!--box-2----->
-                <div class="box-2">
+                <li><div style="">
                     <span>2</span>
                     <p>Lorem Ipsum</p>
                     <p>who seeks after it and wants to have it</p>
                     <p><em>Lorem Ipsum</em></p>
                     <button> Read More</button>
-                </div>
+                </div></li>
                 <!--box-3----->
-                <div class="box-3">
+                <li><div style="">
                     <span>3</span>
                     <p>Lorem Ipsum</p>
                     <p>who seeks after it and wants to have it</p>
                     <p><em>Lorem Ipsum</em></p>
                     <button> Read More</button>
-                </div>    
+                </div>    </li>
+            </ul>
             </div>    
         </div>
     
