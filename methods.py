@@ -66,7 +66,7 @@ def user_profile(username):
         
         #SQL_1 = '''SELECT * FROM post WHERE post_status = %s'''
         #user_details = cursor.execute()
-    count = len(get_all_posts())        #GET NUMBER OF ALL POSTS IN DB
+    count = len(get_all_posts(username))        #GET NUMBER OF ALL POSTS IN DB
     allposts = private_post(username)           #GET ALL 
     #count =  len(allposts)
     recent = []
@@ -122,18 +122,25 @@ def private_post(username):
         return cursor.fetchall()
     
 #GET POST FROM DB
-def get_all_posts() ->'Posts':
+def get_all_posts(username:str) ->'Posts':
     #CHECK USER ID AND RETURN PUBLIC AND ALL USER ID'S POST
     with DbManager(**DBCONFIG) as cursor:
-        #LOG ACTION ------FIX
-        #LOG_SQL ='''INSERT INTO  log ("GET POST" ,username) VALUES(%s,%s)'''
-        SQL = '''SELECT * FROM post WHERE privacy = 'NO' ORDER BY date DESC '''
-        cursor.execute(SQL)
-        post = cursor.fetchall()
-        return post
+        LOG_SQL ="""INSERT INTO  log (Action_done ,username) VALUES(%s,%s)"""
+        cursor.execute(LOG_SQL,('Get Posts',username))
+        AUTHORS_SQL = '''SELECT DISTINCT  first_name, last_name, username FROM users'''
+        cursor.execute(AUTHORS_SQL)
+        users = cursor.fetchall()
+        ALL_PERSONAL_POSTS = """ SELECT * FROM post  WHERE author = %s  ORDER BY date DESC"""
+        cursor.execute(ALL_PERSONAL_POSTS,(username,))
+        all_personal_posts = cursor.fetchall() 
+        ALL_PUBLIC_POSTS = """SELECT * FROM post WHERE privacy = 'NO' ORDER BY date DESC """
+        cursor.execute(ALL_PUBLIC_POSTS) 
+        all_public_posts = cursor.fetchall()
+        ALL_USER_PUBLIC = """SELECT * FROM post WHERE privacy = 'NO'  AND author = %s ORDER BY date DESC """
+        cursor.execute(ALL_USER_PUBLIC,(username,)) 
+        all_user_posts = cursor.fetchall()
+        return [all_personal_posts,all_public_posts,all_user_posts,users]
 
-#ALTER POST STATUS
-#Add functionality to front end
 def post_privacy(status):     #UNUSED FUNCTION
     with DbManager(**DBCONFIG) as cursor:
         if status == 'YES':

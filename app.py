@@ -50,21 +50,27 @@ def profile():
         username = session['username']
         profile = profile_data(username)
         data = user_profile(username)
-        mycount = len(data[2])
-        return render_template('profile.html', profile=profile,username = username, count = data[0],title = title,data = data,mycount = mycount)
+        posts = get_all_posts(username)
+        count = len(posts[1])
+        mycount = len(posts[0])
+       
+        return render_template('profile.html', profile=profile,username = username, count = count,title = title,data = data,mycount = mycount)
     except KeyError:
         return render_template('error.html',title= title)
 #VISIT ANY USERS PROFILE AS GUEST
-@app.route('/profile/<username>/guest')
-def guest_profile(username):
+@app.route('/profile/guest-<guest_username>')
+def guest_profile(guest_username):
     try:
-        current_user = session['username']
-        if current_user != username:
-            #PERSON- BEING REQUESTED
-            profile = profile_data(username)
-            data = user_profile(username)
-            title = f"{username}'s profile"
-            return render_template('profile.html', profile=profile,username = username, count = data[0],title = title,data = data,current_user= current_user)
+        username = session['username']
+        #Check the user requesting the profile and the user profile being requested
+        if username != guest_username:
+            profile = profile_data(guest_username)
+            data = get_all_posts(guest_username)
+            count = len(data[1])
+            mycount = len(data[2])
+            print(mycount)
+            title = f"{guest_username}'s profile"
+            return render_template('profile.html', profile=profile,username = username, count = count,mycount=mycount,title = title,data = data,guest_username= guest_username)
         else:
             #WHEN YOU VISIT YOUR PROFILE
             return redirect(url_for('profile'))
@@ -154,9 +160,9 @@ def setting():
 def blog():
     title = 'Blog'
     try:
-        post = get_all_posts()
-        count = len(post)
         username = session['username']
+        post = get_all_posts(username)
+        count = len(post[1])        
         return render_template('blog.html', post = post, count= count, username = username, title = title)
     except KeyError:
         return render_template('error.html', title = title)
@@ -164,8 +170,9 @@ def blog():
 @app.route('/blog/create',methods= ['GET','POST'])
 def create():
     title = 'New Post'
+    username = session['username']
     if request.method == 'GET':
-        return render_template('newposts.html',title = title)
+        return render_template('newposts.html',title = title, username = username)
     else:
         author = request.form['author']
         title = request.form['title']
@@ -200,7 +207,8 @@ def search(keyword):
 @app.route('/blog/<int:id>')
 def post(id):
     username = session['username']
-    count= len(get_all_posts())
+    data = get_all_posts(username)
+    count = len(data[1])
     with DbManager(**DBCONFIG) as cursor:
         SQL = '''SELECT * FROM post WHERE post_id = %s'''
         cursor.execute(SQL,(id,))
@@ -212,7 +220,7 @@ def post(id):
 @app.route('/blog/edit/<int:id>', methods  = ['GET', 'POST'])
 def edit(id):
     username = session['username']
-    count = len(get_all_posts())
+    count = len(get_all_posts(username))
     with DbManager(**DBCONFIG) as cursor:
         if request.method == 'POST':       
             author = request.form['author']

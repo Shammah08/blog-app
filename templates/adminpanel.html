@@ -18,22 +18,30 @@
 
       {% endfor %}
     </div>
-    <div class="row">
-        Log item:
+    <div class="container">
+      <hr>
+        <h3>Log item:</h3><br>
         {% for log in logs %}
-        {{log[2]}}
+        <table style="border: 1px solid black;">
+          <th>ID</th><th>Action Done</th><th> Username</th>
+          <tr>
+            <td style="border: 1px solid black;">{{log[0]}}</td>
+            <td style="border: 1px solid black;">{{log[1]}}</td>
+            <td style="border: 1px solid black;">{{log[2]}}</td>
+          </tr>
+        </table>
         {% endfor %}
       </div>
     <div class="row">
         Upload section item:
         {% for upload in uploads %}
-        {{uploads}}
+        ->{{uploads}}
         {% endfor %}
       </div>
       <div class="row">
         Comment  section:
         {% for comment in comments %}
-        {{comment}}
+        ->{{comment}}
         {% endfor %}
       </div>
       <div class="col">

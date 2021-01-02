@@ -3,13 +3,13 @@
 {%block body%}
     <div style="margin-left: 2vh;"> 
         <form action="/blog/create" method="POST">
-            Author: <input type="text" name="author" placeholder="Author" required> <br><br>
-            Title: &nbsp;&nbsp;&nbsp;<input type="text" name="title" placeholder="Title" required><br><br>
+            Author: <input type="text" name="author" value = "{{username}}" required> <br><br>
+            Title: &nbsp;&nbsp;&nbsp;<input type="text" name="title" placeholder="Title" required autofocus><br><br>
             <textarea rows="20" cols="80" name= 'content' placeholder="Free your mind" required></textarea><br>
             <div style="margin-left: 300px">
                 <strong>Private: &nbsp;<small><em>Type 'NO' to post public.</em></small></strong><input type="text" name="privacy" value="YES" class="form-control" style="width: 80px;">
             </div> <br><br>
-            <input type="file" name="post-photo" ><button class="btn btn-dark" style="margin-left: 300px; width: 150px; ">Post</button>
+            <input type="file" name="post-photo" ><button class="btn btn-dark" style="margin-left: 250px; width: 150px; ">Post</button>
         </form>
        
         <br>

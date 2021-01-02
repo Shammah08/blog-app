@@ -6,7 +6,7 @@
 <h2><strong> &nbsp;&nbsp;&nbsp;&nbsp; All Posts</strong></h2>
 <main >
   <div class="container"  >
-    {%for title in post%}
+    {%for title in post[1]%}
     <a href="/blog/{{title[0]}}" style="text-decoration: none;"><em>{{title[2]}} <small> by
           {{title[1]}}</small></em></a>
     {%endfor%}
@@ -15,17 +15,18 @@
   <div>
     <div style="display: grid; grid-template-columns: auto auto auto auto;
     grid-template-rows:auto;">
-    {% for item in post %}   
+    {% for item in post[1] %}   
       <div style="padding: 20px;  ">
-    <h5 style="text-align: center; background-color: border-radius: 10px;"><strong>{{item[2]}}</strong></h4>
+    <h5 style="text-align: center;  border-radius: 10px; "><strong>{{item[2]}}</strong></h4>
     <article style="white-space: pre-wrap; text-align: center; " class="text-white-50 mb-4">
-      <em>Author: <strong>{{item[1]}} </strong><br> <strong>Posted on :</strong>{{item[4]}}</em>
+      <em>Author: <a href="/profile/guest-{{item[1]}}"><strong>{{item[1]}} </strong></a><br> <strong>Posted on :</strong>{{item[4]}}</em>
       <p>{{item[3][0:50]}}...<a href="/blog/{{item[0]}}">Read more</a></p>
     </article>
   </div>
     {% endfor %}
     </div>
   </div>
+
 
 </main>
 {%endblock%}

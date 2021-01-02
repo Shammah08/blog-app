@@ -2,73 +2,72 @@
 
 {%block body%}
 <main>
+    {% for detail in profile %}
+    <div style="height: 400px;">
+        <p>
+            {% if username != detail[4] %}
+        <h3><strong> &nbsp;{{guest_username}}'s Profile</strong></h3>
+        {% else %}
+        <a href="/settings" class="float-right"><button class="btn btn-info" style="width:150px;">Settings</button></a>
+        <h4><strong> &nbsp;Hello {{username}}</strong></h4>
+        <a href="/blog/create">
+            <input type="button" class="btn btn-light" value="+New Post" style="width: 150px;">
+        </a>
+        {% endif %}
 
-        {% for data in profile %} 
-        <div style="height: 450px;">
-            <p>
-                <a href="/settings" class="float-right"><button class="btn btn-info" style="width:150px;">Settings</button></a>
-            <h3><strong> &nbsp;Hi {{username}}</strong></h3>
-            <a href="/blog/create">
-                <input type="button" class="btn btn-light" value="+New Post" style="width: 150px;">
-            </a>
-            </p>
+        </p>
         <article style="white-space: pre-wrap;">
-            {{data[7]}}
+            {{detail[7]}}
         </article>
         &nbsp; &nbsp; &nbsp;<em style="color: rgb(0, 0, 0);">Get in touch!</em><br>
         <div class="action" style="display: flex; flex: 1;">
-            &nbsp; &nbsp; &nbsp;<a href="mailto:{{data[3]}}"><button class="btn btn-dark">Send Mail</button></a>&nbsp;&nbsp;
+            &nbsp; &nbsp; &nbsp;<a href="mailto:{{data[3]}}"><button class="btn btn-dark">Send
+                    Mail</button></a>&nbsp;&nbsp;
             <a href="tel:0795058630"><button class="btn btn-info" style="width:100px;">Call</button></a>
-        {% endfor %}       
-       
-           </div>
-           
-    </div>
-</div>
-<a class="nav-link" href="#">
-    All My Posts
-    <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{mycount}}</span>
-</a>
-{% for title in data[2] %}
-<strong><em><a href="/blog/{{title[0]}}" style="text-decoration: none;">"{{title[2]}}"</a></em></strong>
-
-{% endfor %}
-<hr>
-    <h5 class="border-bottom pb-2 mb-0">My Recent Posts</h5>
-    {% for post in data[1] %}
-    <div class="container">
-    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-        <div class="d-flex justify-content-between">
-            <a href="/blog/{{post[0]}}" style="text-decoration: none;">
-            <strong class="text-gray-dark">{{post[2]}}</strong> <!-- Username-->
-            <span class="d-block">  {{post[4]}}<!-- Time-->
-
         </div>
-       <!--  {{post[2]}}Post Title--></a>
-        </span>
-    </div>
-    </div>
-    </div>
+        {%endfor%}
 
-    {% endfor %}
     </div>
-    
+    {% for detail in profile %}
+    {% if username != detail[4] %}
+    <a class="nav-link" href="#">
+        All Posts by {{guest_username}}
+        <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{mycount}}</span>
+    </a>
+    {% for content in data[2] %}
+    <strong><em><a href="/blog/{{content[0]}}" style="text-decoration: none;">"{{content[2]}}"</a></em></strong>
+    {% endfor %}
+
+    {% else %}
+    <a class="nav-link" href="#">
+        My Post
+        <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{mycount}}</span>
+        {% for item in data[1]%}
+    </a>
+    <strong><em><a href="/blog/{{item[0]}}" style="text-decoration: none;">"{{item[2]}}"</a></em></strong>
+    {% endfor %}
+
+    {% endif %}
+    {%endfor%}
+    <hr>
+
     <div class="my-3 p-3 bg-white rounded shadow-sm">
         <h6 class="border-bottom border-gray pb-2 mb-0">All Authors</h6>
-        {% for author in data[3] %} 
+{% for user in data[3]%}
+
         <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <div class="d-flex justify-content-between align-items-center w-100">
-              <strong class="text-gray-dark">{{author[0]}} {{author[1]}} </strong>
-              <a href="/profile/{{author[2]}}/guest">Visit Profile</a>
+            <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <strong class="text-gray-dark">{{user[0]}} {{user[1]}}</strong>
+                    <a href="/profile/guest-{{user[2]}}">Visit Profile</a>
+                </div>
+                <a href="/profile/guest-{{user[2]}}"><span class="d-block">@{{user[2]}}</span></a>
             </div>
-            <a href="/profile/{{author[2]}}/guest"><span class="d-block">@{{author[2]}}</span></a>
-          </div>
         </div>
-        {% endfor%}
+{%endfor%}
     </div>
-    
+
     <small class="d-block text-end mt-3">
         <a href="#">Help</a>
     </small>

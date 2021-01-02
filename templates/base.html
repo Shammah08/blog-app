@@ -65,10 +65,13 @@
         <div class="nav-scroller bg-white shadow-sm">
             <nav class="nav nav-underline" aria-label="Secondary navigation">
                 <a class="nav-link" href="/blog">
-                    All Posts
+                    Public Posts
                     <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{count}}</span>
                 </a>
-                <a class="nav-link" href="/play">Explore</a>
+                <a class="nav-link" href="/play">Explore</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a class="nav-link" href="/profile">  
+                    <em>Active:<strong>{{username}}</strong></em>
+                </a>
             </nav>
         </div>
     </div>
