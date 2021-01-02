@@ -42,7 +42,7 @@ def log_out():
         return redirect('login')
     except KeyError:
         return render_template('error.html',title = title)
-#VISIT OWN PROFILE
+#VISIT OWN PROFILE- PERSONAL
 @app.route('/profile') 
 def profile():
     title = 'My Profile'
@@ -50,22 +50,24 @@ def profile():
         username = session['username']
         profile = profile_data(username)
         data = user_profile(username)
-        return render_template('profile.html', profile=profile,username = username, count = data[0],title = title,data = data)
+        mycount = len(data[2])
+        return render_template('profile.html', profile=profile,username = username, count = data[0],title = title,data = data,mycount = mycount)
     except KeyError:
         return render_template('error.html',title= title)
 #VISIT ANY USERS PROFILE AS GUEST
 @app.route('/profile/<username>/guest')
 def guest_profile(username):
     try:
-        current_name = session['username']
-        if current_name != username:
+        current_user = session['username']
+        if current_user != username:
             #PERSON- BEING REQUESTED
             profile = profile_data(username)
-            print(profile)
             data = user_profile(username)
-            print('This executed')
-            title = username
-            return render_template('profile.html', profile=profile,username = username, count = data[0],title = title,data = data)
+            title = f"{username}'s profile"
+            return render_template('profile.html', profile=profile,username = username, count = data[0],title = title,data = data,current_user= current_user)
+        else:
+            #WHEN YOU VISIT YOUR PROFILE
+            return redirect(url_for('profile'))
     except KeyError:
         title = username
         return render_template('error.html',title= title)
@@ -168,7 +170,8 @@ def create():
         author = request.form['author']
         title = request.form['title']
         content = request.form['content']
-        create_post(author,title,content)
+        privacy = request.form['privacy'].capitalize()
+        create_post(author,title,content,privacy)
         return redirect(url_for('blog'))
 
 @app.route('/about')
@@ -215,10 +218,11 @@ def edit(id):
             author = request.form['author']
             title = request.form['title']
             content = request.form['content']
-            SQL = '''UPDATE  post SET author = %s, title = %s, content = %s WHERE post_id = %s'''
-            cursor.execute(SQL,(author,title,content,id,)) 
-            SQL_2 = '''SELECT * FROM post WHERE post_id = %s '''
-            cursor.execute(SQL_2,(id,))
+            privacy = request.form['privacy'].capitalize()
+            EDIT_SQL = '''UPDATE  post SET author = %s, title = %s, content = %s, privacy = %s WHERE post_id = %s'''
+            cursor.execute(EDIT_SQL,(author,title,content,privacy,id,)) 
+            UPDATED_SQL = '''SELECT * FROM post WHERE post_id = %s '''
+            cursor.execute(UPDATED_SQL,(id,))
             result = cursor.fetchall()       
             return render_template('post.html', content= result , count=count, username = username)
         else:

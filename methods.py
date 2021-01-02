@@ -60,7 +60,6 @@ def log_in(username:str,password:str):
 #FIX THIS SECTION
 def user_profile(username):
     with DbManager(**DBCONFIG) as cursor:
-        #NEEDS WORK
         AUTHORS_SQL = '''SELECT DISTINCT  first_name, last_name, username FROM users'''
         cursor.execute(AUTHORS_SQL)
         authors = cursor.fetchall()
@@ -74,8 +73,7 @@ def user_profile(username):
     for k,v  in enumerate(allposts):
         if int(k) <10:
             recent.append(v)
-    data = [count,recent, allposts, authors]
-    return data
+    return [count,recent, allposts, authors]
 
 def profile_data(username):
     with DbManager(**DBCONFIG) as cursor:
@@ -109,14 +107,15 @@ def view_log(username,password):
             abort(401)
 
 #CREATE POST
-def create_post(author,title,content)-> None:
+def create_post(author,title,content,privacy)-> None:
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
         cursor.execute(LOG_SQL,('CREATE POST',author))
-        SQL = '''INSERT INTO post(author, title, content) VALUES (%s,%s,%s)'''
-        return cursor.execute(SQL,(author,title,content))
-
-def private_post(username):
+        SQL = '''INSERT INTO post(author, title, content,privacy) VALUES (%s,%s,%s,%s)'''
+        return cursor.execute(SQL,(author,title,content,privacy))
+#get  posts for personal profile
+#private and public posts
+def private_post(username):   
     with DbManager(**DBCONFIG) as cursor:
         SQL = """ SELECT * FROM post  WHERE author = %s  ORDER BY date DESC"""
         cursor.execute(SQL, (username,))
@@ -128,14 +127,14 @@ def get_all_posts() ->'Posts':
     with DbManager(**DBCONFIG) as cursor:
         #LOG ACTION ------FIX
         #LOG_SQL ='''INSERT INTO  log ("GET POST" ,username) VALUES(%s,%s)'''
-        SQL = '''SELECT * FROM post ORDER BY date DESC '''
+        SQL = '''SELECT * FROM post WHERE privacy = 'NO' ORDER BY date DESC '''
         cursor.execute(SQL)
         post = cursor.fetchall()
         return post
 
 #ALTER POST STATUS
 #Add functionality to front end
-def post_privacy(status):
+def post_privacy(status):     #UNUSED FUNCTION
     with DbManager(**DBCONFIG) as cursor:
         if status == 'YES':
             SQL = '''ALTER post SET post_status = 1'''

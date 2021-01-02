@@ -2,8 +2,14 @@
 
 {% block body %}
 
-<div class="container" style="height: 350px; text-align: center; margin-top: 20px;">
+<div class="container" style="height: 250px; text-align: center; margin-top: 40px;">
 <h1><strong>Oops!! Something went wrong</strong></h1>
 <h4>You have to be logged in to continue.</h4>
 </div>
+<br>
+<ul style="display: flex; justify-content: space-around; margin: auto; list-style: none;">
+   <li> Proceed to <a href="/login">Login</a> </li>
+<li>Don't have an account? <a href="/signup">Sign Up</a> instead.</li>
+</ul> 
+<br><br>
 {%endblock%}

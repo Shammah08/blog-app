@@ -3,8 +3,20 @@
 {%block body %}
 {% for item in content %}
 <div id="header" style="font-family: monospace;  font-size: 16px; " class="container">
+    <div style="display: flex; justify-content: flex-start; " class="float-left">
+        <form action="#">
+            <a href='#'><input type="button" value="Previous" style="width: 100px; "
+                    class="btn btn-dark"></a>&nbsp;&nbsp;&nbsp;
+        </form></div>
+        <div class="float-right">
+            <form action="#"> 
+            <a href='#'><input type="button" value="Next" style=" width: 100px;"
+                    class="btn btn-light"></a><br><br>
+          </form>
+    </div><br>
     <h2 style="text-align:center ;">{{item[2]}}</h2>
     <div class="form-group">
+        <br>
         <h6>Author: {{item[1]}} </h6>
         <small>&nbsp;&nbsp;&nbsp;&nbsp;Created on {{item[4]}}&nbsp;&nbsp;
             ID: {{item[0]}}</small>
@@ -12,9 +24,11 @@
     <article class="form-control" name="content" id="exampleFormControlTextarea1" rows='20'
         style="white-space: pre-wrap; ">{{item[3]}}</article><br>
     {% if item[1] == username %}
-    <em>Private:</em> <strong>{{status}}</strong>
+    {% for item in content %}
+    <small><em>Private:</em> <strong>{{item[6]}}</strong></small>
     <div style="display: flex; justify-content: flex-start; " class="float-right">
-        <form action="/blog/edit/{{item[0]}}" method="POST">
+{% endfor %}
+        <form method="POST">
             <a href='/blog/delete/{{item[0]}}'><input type="button" value="Delete" style="width: 100px; "
                     class="btn btn-danger"></a>&nbsp;&nbsp;&nbsp;
             <a href='/blog/edit/{{item[0]}}'><input type="button" value="Edit" style=" width: 100px;"
