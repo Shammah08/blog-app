@@ -145,7 +145,7 @@ def setting():
     username= session['username']
     if request.method == 'GET':
         data = profile_data(username)
-        return render_template('settings.html', data = data)
+        return render_template('settings.html', data = data,username = username)
     else:
         first_name = request.form['fname']
         last_name = request.form['lname']
@@ -155,7 +155,7 @@ def setting():
         edit_profile(username,first_name,last_name,email,uname,about)
         data = profile_data(username)
         status = 'Update Successful!!'
-        return render_template('settings.html',data=data, status = status)
+        return render_template('settings.html',data=data, status = status,username = username)
 @app.route('/blog')
 def blog():
     title = 'Blog'
@@ -179,7 +179,10 @@ def create():
         content = request.form['content']
         privacy = request.form['privacy'].capitalize()
         create_post(author,title,content,privacy)
-        return redirect(url_for('blog'))
+        if privacy == 'Yes':
+            return redirect(url_for('profile'))
+        else:
+            return redirect(url_for('blog'))
 
 @app.route('/about')
 def about():
@@ -214,8 +217,19 @@ def post(id):
         cursor.execute(SQL,(id,))
         content = cursor.fetchall()
         title = content[0][2]
-        status = 'NO'
+        status = 'No'
         return render_template('post.html' ,content= content, count=count, username = username,title = title,status = status)
+#BLOG NAVIGATION
+# FIX TO NAVIGATE THROUGH PUBLIC POSTS ONLY  
+@app.route('/blog/next/<int:id>')
+def next(id):
+    id += 1
+    return post(id)
+@app.route('/blog/previous/<int:id>')
+def previous(id):
+    id -= 1
+    return post(id)
+
     #EDIT POST
 @app.route('/blog/edit/<int:id>', methods  = ['GET', 'POST'])
 def edit(id):
