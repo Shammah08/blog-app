@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, escape, abort,url_for,session
-from methods import *
+from models import *
 import hashlib
 
 app = Flask(__name__)
@@ -101,7 +101,7 @@ def admin():
             return abort(401)
     except KeyError:
         return render_template('error.html',title = title)
-
+#MIGRATE THE SQL QUERIES TO THE Methods.py FILE
 @app.route('/adminpanel')
 def admin_panel():
     title = 'Admin Panel'
@@ -217,8 +217,8 @@ def post(id):
         cursor.execute(SQL,(id,))
         content = cursor.fetchall()
         title = content[0][2]
-        status = 'No'
-        return render_template('post.html' ,content= content, count=count, username = username,title = title,status = status)
+   
+        return render_template('post.html' ,content= content, count=count, username = username,title = title)
 #BLOG NAVIGATION
 # FIX TO NAVIGATE THROUGH PUBLIC POSTS ONLY  
 @app.route('/blog/next/<int:id>')
@@ -231,10 +231,11 @@ def previous(id):
     return post(id)
 
     #EDIT POST
+    #MIGRATE SQL TO MODELS.PY FILE
 @app.route('/blog/edit/<int:id>', methods  = ['GET', 'POST'])
 def edit(id):
     username = session['username']
-    count = len(get_all_posts(username))
+    count = len(get_all_posts(username)[1])
     with DbManager(**DBCONFIG) as cursor:
         if request.method == 'POST':       
             author = request.form['author']
@@ -251,10 +252,7 @@ def edit(id):
             SQL = '''SELECT * FROM post WHERE post_id = %s'''
             cursor.execute(SQL,(id,))
             post = cursor.fetchall()
-            content = []
-            for i in post:
-                content.append(i)
-            return render_template('editpost.html', post = content,username = username)
+            return render_template('editpost.html', post = post,username = username)
 #DELETE POST
 @app.route('/blog/delete/<int:id>')
 def delete(id):

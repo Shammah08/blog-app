@@ -17,15 +17,14 @@
     <h2 style="text-align:center ;">{{item[2]}}</h2>
     <div class="form-group">
         <br>
-        <h6>Author: {{item[1]}} </h6>
-        <small>&nbsp;&nbsp;&nbsp;&nbsp;Created on {{item[4]}}&nbsp;&nbsp;
-            ID: {{item[0]}}</small>
+        <h6>Author: <a href="/profile/guest-{{item[1]}}">{{item[1]}}</a> </h6>
+        <strong><small>Posted on:  {{item[4].strftime('%A, %B %d, %Y') }}</strong></small>
     </div>
     <article class="form-control" name="content" id="exampleFormControlTextarea1" rows='20'
         style="white-space: pre-wrap; ">{{item[3]}}</article><br>
     {% if item[1] == username %}
     {% for item in content %}
-    <small><em>Private:</em> <strong>{{item[6]}}</strong></small>
+    <strong><small><em>Private: {{item[6].capitalize()}}</em></small></strong>
     <div style="display: flex; justify-content: flex-start; " class="float-right">
 {% endfor %}
         <form method="POST">

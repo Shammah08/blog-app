@@ -19,7 +19,8 @@
       <div style="padding: 20px;  ">
     <h5 style="text-align: center;  border-radius: 10px; "><strong>{{item[2]}}</strong></h4>
     <article style="white-space: pre-wrap; text-align: center; " class="text-white-50 mb-4">
-      <em>Author: <a href="/profile/guest-{{item[1]}}"><strong>{{item[1]}} </strong></a><br> <strong>Posted on :</strong>{{item[4]}}</em>
+      <em>Author: <a href="/profile/guest-{{item[1]}}"><strong>{{item[1]}} </strong></a><br> 
+        <strong>Posted on :</strong>{{ item[4].strftime('%B %d, %Y') }}</em>
       <p>{{item[3][0:50]}}...<a href="/blog/{{item[0]}}">Read more</a></p>
     </article>
   </div>
