@@ -31,7 +31,7 @@ time_stamp = datetime.now().strftime('%c')
 def sign_up(fname:str,lname:str,email:str,username:str,password:str,time= str):
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL,('SIGN UP',(username)))
+        cursor.execute(LOG_SQL,('Sign up',(username)))
         SQL = '''INSERT INTO users (first_name,last_name, email,username,password) 
         VALUES (%s,%s,%s,%s,%s)'''
         return cursor.execute(SQL,(fname,lname,email,username,password))
@@ -39,7 +39,7 @@ def sign_up(fname:str,lname:str,email:str,username:str,password:str,time= str):
 def log_in(username:str,password:str):
      with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL,('LOG IN',username))
+        cursor.execute(LOG_SQL,('Log in',username))
         USER_SQL = '''SELECT username, password FROM users  '''
         cursor.execute(USER_SQL)
         users = dict(cursor.fetchall())
@@ -63,12 +63,8 @@ def user_profile(username):
         AUTHORS_SQL = '''SELECT DISTINCT  first_name, last_name, username FROM users'''
         cursor.execute(AUTHORS_SQL)
         authors = cursor.fetchall()
-        
-        #SQL_1 = '''SELECT * FROM post WHERE post_status = %s'''
-        #user_details = cursor.execute()
     count = len(get_all_posts(username))        #GET NUMBER OF ALL POSTS IN DB
     allposts = private_post(username)           #GET ALL 
-    #count =  len(allposts)
     recent = []
     for k,v  in enumerate(allposts):
         if int(k) <10:
@@ -90,7 +86,7 @@ def edit_profile(username,first_name,last_name,email,uname,about):
 def view_log(username,password):
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL,('VIEW LOG',username))
+        cursor.execute(LOG_SQL,('View log',username))
         USER_SQL = '''SELECT username, password FROM users  '''
         cursor.execute(USER_SQL)
         users = dict(cursor.fetchall())
@@ -110,7 +106,7 @@ def view_log(username,password):
 def create_post(author,title,content,privacy)-> None:
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL,('CREATE POST',author))
+        cursor.execute(LOG_SQL,('Create post',author))
         SQL = '''INSERT INTO post(author, title, content,privacy) VALUES (%s,%s,%s,%s)'''
         return cursor.execute(SQL,(author,title,content,privacy))
 #get  posts for personal profile
@@ -141,6 +137,7 @@ def get_all_posts(username:str) ->'Posts':
         all_user_posts = cursor.fetchall()
         return [all_personal_posts,all_public_posts,all_user_posts,users]
 
+
 def post_privacy(status):     #UNUSED FUNCTION
     with DbManager(**DBCONFIG) as cursor:
         if status == 'YES':
@@ -155,7 +152,7 @@ def post_privacy(status):     #UNUSED FUNCTION
 def db_search(keyword):
     with DbManager(**DBCONFIG) as cursor:  
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL,('SEARCH',keyword))
+        cursor.execute(LOG_SQL,('Search',keyword))
         #SQL_POST = """SELECT content FROM  post WHERE content  LIKE '%s%%' """
         #cursor.execute(SQL_POST,keyword)
         #posts = cursor.fetchall()
@@ -168,7 +165,7 @@ def db_search(keyword):
 def  edit_post(id):
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL,('EDIT POST',id))
+        cursor.execute(LOG_SQL,('Edit post',id))
         SQL = '''SELECT * FROM post WHERE post_id  = %s'''
         cursor.execute(SQL,(id,))
         post = cursor.fetchall()
@@ -180,7 +177,7 @@ def  edit_post(id):
 def delete_post(id):
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL ='''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL,('DELETE POST',id))
+        cursor.execute(LOG_SQL,('Delete post',id))
         delete = '''DELETE FROM post WHERE post_id  = %s'''
         cursor.execute(delete,(id,))
         return redirect(url_for('blog'))        
@@ -199,21 +196,20 @@ def lucky_number(guess):
         return response
 #password generator
 def password_gen():
-    number = ['12345678']
-    letters = ['abcdefghijklmnopqrstuvwxyz']
-    upper = []
-    for i in letters:
-        upper.append(i.upper())
-
-    symbols = ['@!#$%^&*()}{][":><?']
-    gen = str(number +letters + upper + symbols)
-    length = 16
+    number = ['1234567890']
+    lower_case = ['abcdefghijklmnopqrstuvwxyz']
+    upper_case = [ ]
+    for i in lower_case:
+        upper_case.append(i.upper())
+    #symbols = ['@!#$%&']
+    gen = str(number +lower_case + upper_case )
+    length = 10
     password = random.sample(gen,length)
-    return ''.join(password)
+    print(gen)
+    return ' '.join(password)
 ##search phrase function
 def search4letters(letter,phrase):
     result = list(set(letter).intersection(set(phrase)))
-
     return str(result)[1:-1]
 #calc mi function
 def bmi_calc(name: str,weight:int, height:float):
@@ -227,8 +223,3 @@ def bmi_calc(name: str,weight:int, height:float):
 
 
 
-'''post = get_all_posts()
-date = post[0][4] 
-
-print(datetime.strftime(date,'%c'))
-USER FRIENDLY TIME FORMAT WITH TIME SAVED IN DB'''

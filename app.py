@@ -216,20 +216,51 @@ def post(id):
         SQL = '''SELECT * FROM post WHERE post_id = %s'''
         cursor.execute(SQL,(id,))
         content = cursor.fetchall()
-        title = content[0][2]
+        #title = content[0][2]
    
-        return render_template('post.html' ,content= content, count=count, username = username,title = title)
+        return render_template('post.html' ,content= content, count=count, username = username,)
 #BLOG NAVIGATION
 # FIX TO NAVIGATE THROUGH PUBLIC POSTS ONLY  
 @app.route('/blog/next/<int:id>')
 def next(id):
-    id += 1
-    return post(id)
+    username = session['username']
+    try:
+        posts = get_all_posts(username)[1]
+        all_id = []
+        for item in posts:
+            all_id.append(item[0])
+        for i in all_id:
+            if id in all_id:
+                position = all_id.index(id)
+                if position  ==  0 :
+                    return post(id)
+                else:
+                    nxt = position -1
+                    return post(all_id[nxt])
+    except:
+        print( '<h1> An error occured')
+
 @app.route('/blog/previous/<int:id>')
 def previous(id):
-    id -= 1
-    return post(id)
+    try:
+        username = session['username']
+        posts = get_all_posts(username)[1]
+        all_id = []
+        for item in posts:
+            all_id.append(item[0])
+        for i in all_id:
+            if id in all_id:
+                position = int(all_id.index(id))
+                if position == len(all_id) - 1:
+                    print(len(all_id))
+                    return post(id)
+                else:
+                    print(len(all_id))
+                    prev = position + 1
+                    return post(all_id[prev])
 
+    except :
+        print( '<h1> An error occured')
     #EDIT POST
     #MIGRATE SQL TO MODELS.PY FILE
 @app.route('/blog/edit/<int:id>', methods  = ['GET', 'POST'])

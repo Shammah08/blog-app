@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<main class="container">
 <strong>{{status}}</strong>
 <h2><strong>Profile Settings</strong></h2><br>
 
@@ -36,15 +37,13 @@
     </div>
     <br>
 
-    <section>
+    <article >
         <h3>About</h3>
-        <textarea rows="10" cols="50" name='about' style="white-space: pre-wrap;">
-                {{setting[7]}}
-             </textarea>
-    </section>
+        <textarea rows="10" cols="60" name='about' style="white-space: pre-wrap;">{{setting[7]}}</textarea>
+    </article>
     <br>
-    <div class="contact-me">
-        <div class="col-md-6 mb-3">
+    <div>
+        <div>
             <h3><label for="Social Media">Social Media</label></h3>
             <input type="text" class="form-control" id="Instagram" placeholder="Instagram" value=""><br>
             <input type="text" class="form-control" id="GitHub" placeholder="GitHub" value=""><br>
@@ -74,5 +73,6 @@
     <em>Sucks to see you leave.</em>
     <br>
 </div>
+</main>
 <hr><br>
 {% endblock %}
