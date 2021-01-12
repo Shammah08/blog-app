@@ -6,16 +6,17 @@
     <div class="container">
         
             {% if username != detail[4] %}
-            <p>
-        <h3><strong> &nbsp;{{guest_username}}'s Profile</strong></h3>
-        {% else %}
-        <a href="/settings" class="float-right"><button class="btn btn-info" style="width:150px;">Settings</button></a>
-        <h4><strong> &nbsp;Hello {{username}}</strong></h4>
-        <a href="/blog/create">
-            <input type="button" class="btn btn-light" value="+New Post" style="width: 150px;">
-        </a>
-    </p>
-        {% endif %}
+             <p>
+                <h3><strong> &nbsp;{{guest_username}}'s Profile</strong></h3>
+            {% else %}
+                <a href="/settings"><button class="btn btn-info" style="width:150px; float: right;margin-left: 10px">Settings </button> </a>
+                <a href="/my-to-do"><button class="btn btn-dark" style="float:right; ">ToDo List</button></a>&nbsp;&nbsp;
+                <h4><strong> &nbsp;Hello {{username}}</strong></h4>
+                <a href="/blog/create">
+                <input type="button" class="btn btn-light" value="+New Post" style="width: 150px;">
+                 </a>
+            </p>
+            {% endif %}
         <article style="white-space: pre-wrap; height: 200px;">
             {{detail[7]}}
         </article>
@@ -24,6 +25,8 @@
             &nbsp; &nbsp; &nbsp;<a href="mailto:{{detail[3]}}"><button class="btn btn-dark">Send
                     Mail</button></a>&nbsp;&nbsp;
             <a href="tel:0795058630"><button class="btn btn-info" style="width:100px;">Call</button></a>
+
+
         </div>
         {%endfor%}
 
@@ -38,7 +41,7 @@
             <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{mycount}}</span> public post(s)
         </a>
         {% for content in data[2] %}
-        <strong><em><a href="/blog/{{content[0]}}" style="text-decoration: none;">{{content[2]}} , </a></em></strong>
+        <strong><em><a href="/blog/{{content[2]}}/{{content[0]}}" style="text-decoration: none;">{{content[2]}} , </a></em></strong>
         {% endfor %}
     
         {% else %}

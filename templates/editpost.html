@@ -3,14 +3,16 @@
 <br>
 <div id="header" style="font-family: monospace;  font-size: 16px; margin-left: 20px; height: 850px;" class="container">
     <div style="display: inline;">
-        <h2 style="display: inline;">Edit Post.</h2>
-    {% for item in post %}
-    <br>
+        {% for item in post %}
+        <a href="/blog/{{item[0]}}" style="float: right">
+                <input type="button" class="btn btn-light" value="Cancel" style="width: 150px;">
+                 </a>
+        <h2 style="display: inline;">Edit Post</h2>
+    <br><br>
     <div class="form-group">
         <form action="/blog/edit/{{item[0]}}" method="POST">
-            Author : <input type="text" name="author" class="form-control" value='{{item[1]}}'> &nbsp;&nbsp;&nbsp;
-            Title: &nbsp;&nbsp;<input type="text" name="title" class="form-control" value='{{item[2]}}'><br>
-            <small>Post ID: {{item[0]}}</small><br>
+            <h4>Title: </h4><input type="text" name="title" class="form-control" value='{{item[2]}}' style="width: 200px;"><br>
+            <h4>Content</h4>
             <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows='20' >{{item[3]}}</textarea><br>
             <small><strong>Privacy: <input type="text" name="privacy" value = "{{item[6]}}" style="width: 60px;"></strong></small>
             <input type="submit" value="Save Changes" class="btn btn-success " style="width: 200px; margin-left: 200px;">
