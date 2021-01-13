@@ -89,47 +89,49 @@ def profile_data(username):
         cursor.execute(PROFILE_SQL, (username,))
         return cursor.fetchall()
 
-print(profile_data('Admin')[0][0])
-#print(user_profile('Admin'))
 
-def create_to_do(user_id: int, username: str, task: str, status: str) -> None:
+def add_to_do(userid: int, task: str, status: str) -> None:
     with DbManager(**DBCONFIG) as cursor:
-        SQL = '''INSERT INTO ToDoTest id = %s, TaskName = %s, TaskStatus = %s,'''
-        return cursor.execute(SQL, (user_id, task, status))
+        LOG_SQL =''' INSERT INTO log(Action_done, username) VALUES (%s, %s)'''
+        cursor.execute(LOG_SQL,('Add to-do Item', userid))
+        SQL = '''INSERT INTO ToDoTest (TaskName, TaskStatus, userid) VALUES (%s, %s, %s) '''
+        return cursor.execute(SQL, (task, status, userid))
+        
+
 
 
 def get_to_do(user_id: int) -> tuple:
     with DbManager(**DBCONFIG) as cursor:
-        SQL = """SELECT * FROM posts WHERE id= %s """
-        cursor.execute(SQL, user_id)
+        SQL = """SELECT * FROM ToDoTest WHERE userid= %s """
+        cursor.execute(SQL, (user_id,))
         return cursor.fetchall()
 
 
 def edit_to_do(user_id: int, username: str, task: str, status: str) -> tuple:
     with DbManager(**DBCONFIG) as cursor:
-        SQL = '''UPDATE ToDoTest SET task = %s, status = %s WHERE id = %s'''
+        SQL = '''UPDATE ToDoTest SET task = %s, status = %s WHERE userid = %s'''
         return cursor.execute(SQL, (task, status, username, user_id))
 
 
-def edit_profile(username, first_name, last_name, email, uname, about):
+def edit_profile(userid, first_name, last_name, email, username, about):
     with DbManager(**DBCONFIG) as cursor:
         PROFILE_SQL = '''UPDATE users SET first_name = %s, last_name = %s,
-        email = %s, username = %s, about = %s  WHERE username = %s '''
-        return cursor.execute(PROFILE_SQL, (first_name, last_name, email, uname, about, username))
+        email = %s, username = %s, about = %s  WHERE userid = %s '''
+        return cursor.execute(PROFILE_SQL, (first_name, last_name, email, username, about, userid))
 
 
 # UPDATE VIEW LOG FUNcTION
 
 
-def view_log(username, password):
+def view_log(userid, password):
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL, ('View log', username))
-        USER_SQL = '''SELECT username, password FROM users  '''
+        cursor.execute(LOG_SQL, ('View log', userid))
+        USER_SQL = '''SELECT userid, password FROM users  '''
         cursor.execute(USER_SQL)
         users = dict(cursor.fetchall())
-        if username in users:
-            if password == users[username]:
+        if userid in users:
+            if password == users[userid]:
                 SQL = '''SELECT * FROM log ORDER BY id DESC'''
                 cursor.execute(SQL)
                 log_data = cursor.fetchall()
@@ -155,10 +157,10 @@ def create_post(author, title, content, privacy, userid: int) -> None:
 # get  posts for personal profile
 # private and public posts
 
-def private_post(username):
+def private_post(userid):
     with DbManager(**DBCONFIG) as cursor:
-        SQL = """ SELECT * FROM post  WHERE author = %s  ORDER BY date DESC"""
-        cursor.execute(SQL, (username,))
+        SQL = """ SELECT * FROM post  WHERE user_id = %s  ORDER BY date DESC"""
+        cursor.execute(SQL, (userid,))
         return cursor.fetchall()
 
 # GET POST FROM DB
@@ -211,12 +213,12 @@ def db_search(keyword):
         return authors, posts
 
 
-def edit_post(username):
+def edit_post(userid):
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL, ('Edit post', username))
+        cursor.execute(LOG_SQL, ('Edit post', userid))
         SQL = '''SELECT * FROM post WHERE post_id  = %s'''
-        cursor.execute(SQL, username)
+        cursor.execute(SQL, userid)
         post = cursor.fetchall()
         content = []
         for i in post:

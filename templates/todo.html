@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main class="container">
+<form action='/my-to-do' method="post">
+
+    <table style="border:2px solid black; padding:2px; text-align: center;">
+         <tr><h4>My to-do list</h4></tr>
+       <tr>
+        <td style="border:2px solid black; margin-left: 2px; padding:2px; width:200px"><h5>Task</h5></td>
+        <td style="border:2px solid black; margin-left: 2px; padding:2px; width:200px"><h5>Status</h5></td>
+        <td style="border:2px solid black; margin-left: 2px; padding:2px; width:200px"><h5>Update</h5></td>
+        <td style="border:2px solid black; margin-left: 2px; padding:2px; width:200px"><h5>Added on</h5></td>
+        <td style="border:2px solid black; margin-left: 2px; padding:2px; width:200px"><h5>Update on</h5></td>
+       </tr>
+
+    {% for task in todo %}
+        <tr>
+            <td style="border:1px solid black; margin-left: 2px; padding:2px; width:200px">{{task[1]}}</td>
+            <td style="border:1px solid black; margin-left: 2px; padding:2px; width:200px"><strong>{{task[2]}}</strong></td>
+            <td style="border:1px solid black; margin-left: 2px; padding:2px; width:200px"><a href="#">Edit</a> </td>
+            <td style="border:1px solid black; margin-left: 2px; padding:2px; width:200px">{{task[4].strftime('%b %d, %H:%M %p')}}</td>
+
+             <td style="border:1px solid black; margin-left: 2px; padding:2px; width:200px">{{task[4].strftime('%b %d, %H:%M %p')}}</td>
+           
+        </tr>
+        {% endfor %}
+        <tr>
+           <td style="border:1px solid black; margin-left: 2px; padding:2px;"><input type="text" placeholder="Add new task" name="task" class="form-control" style="padding:0; width:200px;"></td>
+           <td style="border:1px solid black; margin-left: 2px; padding:2px;"><input type="text" placeholder="Status" name="status" class="form-control" style="padding:0;"></td>
+           <td style="border:1px solid black; margin-left: 2px; padding:2px;"></td>
+           <td style="border:1px solid black; margin-left: 2px; padding:2px;"></td>
+           <td style="border:1px solid black; margin-left: 2px; padding:2px;"><input type="submit" class="btn btn-light" value="Add" style="width:200px; padding:0;margin: 0 0 0 0 ;"></td>
+        </tr>
+
+    </table>
+
+       </form>
+    <br><br>
+    </div>
+
+</main>
+
+{% endblock %}

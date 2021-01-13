@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, abort, url_for, session, flash
-from models import ( get_all_posts, user_profile, profile_data, private_post,  DbManager,sign_up,log_in, create_to_do, get_to_do,edit_to_do,
-edit_profile, view_log, create_post, post_privacy, db_search, edit_post, delete_post,bmi_calc,search4letters,password_gen,lucky_number)
+from models import *
 import hashlib
 
 app = Flask(__name__)
@@ -80,27 +79,19 @@ def profile():
 
 
 @app.route('/my-to-do', methods=['GET', 'POST'])
-def my_to_do(userid):
+def my_to_do():
     username = session['username']
-    userid = profile_data(username)[0][0]
-    print('USER_ID: ', userid)
+    userid = session['userid']
     title = 'My To-Do'
-    print('Tuko hapa')
     if request.method == 'GET':
-        print('GET TO-DO LIST')
         todo = get_to_do(userid)
-        print('Query passed')
-        '''todo = [(1, 'Code', 'Pending', datetime.now().strftime('%a %d, %H:%M %p'), 'Admin'),
-                (2, 'Vipingo', 'Done', datetime.now().strftime('%A %d, %H:%M %p, %Y'), 'Shammah'),
-                (3, 'Wash utensils', 'Pending', datetime.now().strftime('%A %d, %H:%M %p, %Y'), 'Shammah')]
-        '''
         return render_template('todo.html', title=title, todo=todo, username=username)
 
     else:
         task = request.form['task']
         status = request.form['status']
-        create_to_do(userid, username, task, status)
-        return redirect(url_for('my-to-do'))
+        add_to_do(userid,  task, status)
+        return redirect(url_for('my_to_do'))
 
 
 # CREATE NEW TO-DO
@@ -112,8 +103,8 @@ def to_do_create(username, userid):
     username = session['username']
     task = request.form['task']
     status = request.form['status']
-    create_to_do(userid, username, task, status)
-    return redirect(url_for('/my-to-do'))
+    add_to_do(userid,task, status)
+    return redirect(url_for('my-to-do'))
 
 
 # VISIT ANY USERS PROFILE AS GUEST
@@ -307,6 +298,7 @@ def search(keyword):
 @app.route('/blog/<int:id>')
 def post(id):
     username = session['username']
+    userid = session['userid']
     data = get_all_posts(userid)
     count = len(data[1])
     with DbManager(**DBCONFIG) as cursor:
@@ -325,6 +317,7 @@ def post(id):
 @app.route('/blog/next/<int:id>')
 def next(id):
     username = session['username']
+    userid = session['userid']
     try:
         posts = get_all_posts(userid)[1]
         all_id = []
@@ -346,6 +339,7 @@ def next(id):
 def previous(id):
     try:
         username = session['username']
+        userid = session['userid']
         posts = get_all_posts(userid)[1]
         all_id = []
         for item in posts:
