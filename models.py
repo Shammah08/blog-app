@@ -69,13 +69,13 @@ def log_in(username: str, password: str):
 # FIX THIS SECTION
 
 
-def user_profile(username):
+def user_profile(userid):
     with DbManager(**DBCONFIG) as cursor:
-        AUTHORS_SQL = '''SELECT DISTINCT  first_name, last_name, username FROM users'''
+        AUTHORS_SQL = '''SELECT DISTINCT  first_name, last_name, username, id FROM users'''
         cursor.execute(AUTHORS_SQL)
         authors = cursor.fetchall()
-    count = len(get_all_posts(username)) # GET NUMBER OF ALL POSTS IN DB
-    allposts = private_post(username)  # GET ALL
+    count = len(get_all_posts(userid)) # GET NUMBER OF ALL POSTS IN DB
+    allposts = private_post(userid)  # GET ALL
     recent = []
     for k, v in enumerate(allposts):
         if int(k) < 10:
@@ -127,7 +127,7 @@ def view_log(userid, password):
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
         cursor.execute(LOG_SQL, ('View log', userid))
-        USER_SQL = '''SELECT userid, password FROM users  '''
+        USER_SQL = '''SELECT id, password FROM users  '''
         cursor.execute(USER_SQL)
         users = dict(cursor.fetchall())
         if userid in users:

@@ -64,11 +64,11 @@ def profile():
         userid = session['userid']
         username = session['username']
         data_profile = profile_data(username)
-        data = user_profile(username)
+        data = user_profile(userid)
         posts = get_all_posts(userid)
         count = len(posts[1])
         mycount = len(posts[0])
-        return render_template('profile.html', profile=data_profile, username=username, count=count, title=title, data=data,
+        return render_template('profile.html', profile=data_profile, username=username, count=count, title=title, data=data, posts=posts,
                                mycount=mycount)
     except KeyError:
         return render_template('error.html', title=title)
@@ -114,14 +114,15 @@ def to_do_create(username, userid):
 def guest_profile(guest_username):
     try:
         username = session['username']
+        # get guest userid
+        userid = session['userid']
         # Check the user requesting the profile and the user profile being requested
 
         if username != guest_username:
             profile = profile_data(guest_username)
-            data = get_all_posts(guest_userid)
+            data = get_all_posts(profile[0][0])
             count = len(data[1])
             mycount = len(data[2])
-            print(mycount)
             title = f"{guest_username}'s profile"
             return render_template('profile.html', profile=profile, username=username, count=count, mycount=mycount,
                                    title=title, data=data, guest_username=guest_username)
@@ -138,7 +139,7 @@ def guest_profile(guest_username):
 
 
 @app.route('/admin', methods=['POST', 'GET'])
-def admin(userid):
+def admin():
     title = 'Administration'
     userid = session['userid']
     try:
@@ -151,7 +152,7 @@ def admin(userid):
                 # give password to view log
                 code = request.form['password']
                 password = hashlib.sha256(f'{str(code)}'.encode()).hexdigest()
-                log_data = view_log(session['username'], password)
+                log_data = view_log(session['userid'], password)
                 if log_data == 'WRONG PASSWORD!!':
                     return render_template('admin.html', response=log_data, status=status, title=title)
                 else:
@@ -208,7 +209,7 @@ def signup():
 
 
 @app.route('/settings', methods=['POST', 'GET'])
-def setting(userid):
+def setting():
     username = session['username']
     userid = session['userid']
     if request.method == 'GET':
@@ -348,42 +349,42 @@ def previous(id):
             if id in all_id:
                 position = int(all_id.index(id))
                 if position == len(all_id) - 1:
-                    print(len(all_id))
                     return post(id)
                 else:
-                    print(len(all_id))
                     prev = position + 1
                     return post(all_id[prev])
 
     except:
-        print('<h1> An error occurred')
+        return ('<h1> An error occurred</h1>')
 
     #  EDIT POST
     # MIGRATE SQL TO MODELS.PY FILE
 
 
-@app.route('/blog/edit/<int:id>', methods=['GET', 'POST'])
-def edit(id):
+@app.route('/blog/edit/<int:post_id>', methods=['GET', 'POST'])
+def edit(post_id):
     username = session['username']
-    # id = profile_data(username)[0][0]
-    count = len(get_all_posts(username)[1])
+    userid = session['userid']
+    count = len(get_all_posts(userid)[1])
     with DbManager(**DBCONFIG) as cursor:
         if request.method == 'POST':
-            author = request.form['author']
+            author =  username
             title = request.form['title']
             content = request.form['content']
             privacy = request.form['privacy'].capitalize()
             EDIT_SQL = '''UPDATE  post SET author = %s, title = %s, content = %s, privacy = %s WHERE post_id = %s'''
-            cursor.execute(EDIT_SQL, (author, title, content, privacy, id,))
-            UPDATED_SQL = '''SELECT * FROM post WHERE post_id = %s '''
-            cursor.execute(UPDATED_SQL, id)
+            cursor.execute(EDIT_SQL, (author, title, content, privacy, post_id,))
+            UPDATED_SQL = '''SELECT * FROM post WHERE post_id = %s'''
+            cursor.execute(UPDATED_SQL, (post_id,))
             result = cursor.fetchall()
             return render_template('post.html', content=result, count=count, username=username)
         else:
+            LOG_SQL =''' INSERT INTO log (Action_done, username) VALUES (%s, %s)'''
+            cursor.execute(LOG_SQL,(f'Edit post {post_id}',username))
             SQL = '''SELECT * FROM post WHERE post_id = %s'''
-            cursor.execute(SQL, id)
-            post = cursor.fetchall()
-            return render_template('editpost.html', post=post, username=username)
+            cursor.execute(SQL, (post_id,))
+            content = cursor.fetchall()
+            return render_template('editpost.html', post=content, username=username)
 
 
 # DELETE POST
