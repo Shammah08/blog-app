@@ -4,24 +4,17 @@
 <div style="margin-left: 2vh;" xmlns="http://www.w3.org/1999/html">
         <form action="/blog/create" method="POST">
             <h4>Title:</h4><input type="text" class="form-control" name="title" style="width: 300px;" placeholder="Title" required autofocus><br><br>
-            <textarea rows="20" cols="80" name= 'content' placeholder="Free your mind" required></textarea><br>
-            <div style="margin-left: 300px">
+            <textarea rows="20" cols="60" name= 'content' placeholder="Free your mind" required></textarea><br>
+            <div style="margin-left: 200px">
                 <strong>Private: &nbsp;
                     <label for="yes" >
-                        <input type="radio" id="yes" name="privacy" value="Yes" class="form-control">Yes
-                    </label>
+                        Yes &nbsp;&nbsp;<input type="checkbox" name="yes" value="yes"><br>
+                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
                     <label for="no">
-                    <input type="radio" id="no" name="privacy" value="No" class="form-control">No
+                        No? &nbsp;&nbsp;<input type="checkbox" name='no' value="no"><br>
                     </label>
                 </strong>
             </div>
-            <!--<label for="yes-no">
-                Yes: <input type="radio" value="yes" checked>
-            </label>
-             <label for="no">
-                No: <input type="radio" value="no">
-            </label>
-            -->
 
             <br><br>
             <input type="file" name="post-photo" ><button class="btn btn-dark" style="margin-left: 250px; width: 150px; ">Post</button>

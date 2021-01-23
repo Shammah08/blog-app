@@ -22,17 +22,21 @@
     </div>
     <article class="form-control" name="content" id="exampleFormControlTextarea1" rows='20'
         style="white-space: pre-wrap; ">{{item[3]}}</article><br>
-    {% if item[1] == username %}
+    {% if item[1] == username  or username == 'Admin'  %}
     {% for item in content %}
+
+    <!--Privacy-->
     <strong><small><em>Private: {{item[6].capitalize()}}</em></small></strong>
     <div style="display: flex; justify-content: flex-start; " class="float-right">
 {% endfor %}
+<!--User controls     Delete and Edit functions-->
         <form method="POST">
             <a href='/blog/delete/{{item[0]}}'><input type="button" value="Delete" style="width: 100px; "
                     class="btn btn-danger"></a>&nbsp;&nbsp;&nbsp;
+                    {% if item[1] == username %}
             <a href='/blog/edit/{{item[0]}}'><input type="button" value="Edit" style=" width: 100px;"
                     class="btn btn-primary"></a><br><br>
-          
+                {% endif %}
         </form>
         {% endif %}
     </div>

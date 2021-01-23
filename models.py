@@ -75,7 +75,7 @@ def user_profile(userid):
         cursor.execute(AUTHORS_SQL)
         authors = cursor.fetchall()
     count = len(get_all_posts(userid)) # GET NUMBER OF ALL POSTS IN DB
-    allposts = private_post(userid)  # GET ALL
+    allposts = private_post(userid)[1]  # GET ALL
     recent = []
     for k, v in enumerate(allposts):
         if int(k) < 10:
@@ -157,11 +157,17 @@ def create_post(author, title, content, privacy, userid: int) -> None:
 # get  posts for personal profile
 # private and public posts
 
-def private_post(userid):
+def private_post(userid: int) -> list:
     with DbManager(**DBCONFIG) as cursor:
-        SQL = """ SELECT * FROM post  WHERE user_id = %s  ORDER BY date DESC"""
-        cursor.execute(SQL, (userid,))
-        return cursor.fetchall()
+        ALL_POSTS = """ SELECT title, post_id FROM post  WHERE user_id = %s  ORDER BY date DESC"""
+        cursor.execute(ALL_POSTS, (userid,))
+        all_post = cursor.fetchall()
+        ID_SQL = '''SELECT post_id FROM post WHERE user_id = %s'''
+        cursor.execute(ID_SQL, (userid,))
+        post_id = cursor.fetchall()
+        return [post_id, all_post]
+
+
 
 # GET POST FROM DB
 
@@ -171,8 +177,8 @@ def get_all_posts(userid: int) -> 'Posts':
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL = """INSERT INTO  log (Action_done ,username) VALUES(%s,%s)"""
         cursor.execute(LOG_SQL, ('Get Posts', userid))
-        AUTHORS_SQL = '''SELECT DISTINCT  first_name, last_name, username FROM users'''
-        cursor.execute(AUTHORS_SQL)
+        USERS = '''SELECT DISTINCT  first_name, last_name, username,id FROM users'''
+        cursor.execute(USERS)
         users = cursor.fetchall()
         ALL_PERSONAL_POSTS = """ SELECT * FROM post  WHERE user_id = %s  ORDER BY date DESC"""
         cursor.execute(ALL_PERSONAL_POSTS, (userid,))

@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block body %}
-            <div class="about-text">
-                <p>About Me</p>
-                <p>Lorem Ipsum</p>
+            <div class="container">
+                <h2 style="text-align: center;">About Wakanda</h2>
+                <h4>Lorem Ipsum</h4>
                 <p>"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
                     "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
                     </p>
@@ -16,35 +16,36 @@
             </div>
 
         </div>
-            <div class="container" style="display: grid; grid-column: 3; justify-content: space-around;">
+            <div class="container">
                 <!--box-1----->
-                <ul>
+                <ul style="display: flex; flex-direction: grid; justify-content: space-around;">
                 <li><div style="">
                     <span>1</span>
-                    <p>Lorem Ipsum</p>
-                    <p>who seeks after it and wants to have it</p>
-                    <p><em>Lorem Ipsum</em></p>
-                    <button> Read More</button>
+                    <strong>Lorem Ipsum</strong><br><br>
+                    <p>There is no one who loves pain itself</p>
+                    <p>by <small>Lorem Ipsum</small></p>
+                    <button class="btn btn-dark"> Read More</button>
                 </div></li>
                 <!--box-2----->
                 <li><div style="">
                     <span>2</span>
-                    <p>Lorem Ipsum</p>
-                    <p>who seeks after it and wants to have it</p>
-                    <p><em>Lorem Ipsum</em></p>
-                    <button> Read More</button>
+                    <strong>Lorem Ipsum</strong><br><br>
+                    <p>Who seeks after it and wants to have it</p>
+                    <p>by <small>Lorem Ipsum</small></p>
+                    <button class="btn btn-light"> Read More</button>
                 </div></li>
                 <!--box-3----->
                 <li><div style="">
                     <span>3</span>
-                    <p>Lorem Ipsum</p>
-                    <p>who seeks after it and wants to have it</p>
-                    <p><em>Lorem Ipsum</em></p>
-                    <button> Read More</button>
+                    <strong>Lorem Ipsum</strong><br><br>
+                    <p>Simply because it is pain...</p>
+                    <p>by <small>Lorem Ipsum</small></p>
+                    <button class="btn btn-dark"> Read More</button>
                 </div>    </li>
             </ul>
             </div>    
         </div>
+        <br>
     
     {% endblock%}
     

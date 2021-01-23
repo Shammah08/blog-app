@@ -56,7 +56,6 @@ def log_out():
 
 # VISIT OWN PROFILE- PERSONAL
 
-
 @app.route('/profile')
 def profile():
     title = "My Profile"
@@ -65,6 +64,7 @@ def profile():
         username = session['username']
         data_profile = profile_data(username)
         data = user_profile(userid)
+    
         posts = get_all_posts(userid)
         count = len(posts[1])
         mycount = len(posts[0])
@@ -252,7 +252,7 @@ def create():
         author = username
         title = request.form['title']
         content = request.form['content']
-        if request.form.getlist('privacy') == 'Yes':
+        if request.form.getlist('yes'):
             privacy = 'Yes'
         else:
             privacy = "No"
@@ -319,43 +319,58 @@ def post(id):
 def next(id):
     username = session['username']
     userid = session['userid']
+    public_posts = get_all_posts(userid)[1]
+    # private_id = private_post(userid)[0]
+    personal_posts = get_all_posts(userid)[0]
+    private_id = []
+    public_id = []
+    for item in personal_posts:
+        private_id.append(item[0])
+    for item in public_posts:
+        public_id.append(item[0])
+        # print(all_id)
     try:
-        posts = get_all_posts(userid)[1]
-        all_id = []
-        for item in posts:
-            all_id.append(item[0])
-        for i in all_id:
-            if id in all_id:
-                position = all_id.index(id)
-                if position == 0:
-                    return post(id)
-                else:
-                    nxt = position - 1
-                    return post(all_id[nxt])
+        if id in public_id:
+            position = all_id.index(id)
+            nxt = position - 1
+            return post(public_id[nxt])
+        else:
+            if id in private_id:
+                position = private_id.index(id)
+                print('Private pos', position)
+                nxt = position  - 1
+                return(post(private_id[nxt]))   
     except:
-        print('<h1> An error occurred')
+        return f'<h2>An error  has occured </h2><br> <h4>Contact Support For Assistance</h4> <br> <a href="/blog/{id}">Back</a>'
 
 
 @app.route('/blog/previous/<int:id>')
 def previous(id):
+    username = session['username']
+    userid = session['userid']
+    public_posts = get_all_posts(userid)[1]
+    # private_id = private_post(userid)[0]
+    personal_posts = get_all_posts(userid)[0]
+    private_id = []
+    public_id = []
+    for item in personal_posts:
+        private_id.append(item[0])
+    for item in public_posts:
+        public_id.append(item[0])
+    print(private_id)
+    print(public_id)
     try:
-        username = session['username']
-        userid = session['userid']
-        posts = get_all_posts(userid)[1]
-        all_id = []
-        for item in posts:
-            all_id.append(item[0])
-        for i in all_id:
-            if id in all_id:
-                position = int(all_id.index(id))
-                if position == len(all_id) - 1:
-                    return post(id)
-                else:
-                    prev = position + 1
-                    return post(all_id[prev])
-
+        if id in public_id:
+            position = public_id.index(id)
+            prev = position + 1
+            return post(public_id[prev])
+        else:
+            if id in private_id:
+                position = private_id.index(id)
+                prev = position + 1
+                return post(private_id[prev])       
     except:
-        return ('<h1> An error occurred</h1>')
+        return f'<h2>An error  has occured </h2><br> <h4>Contact Support For Assistance</h4> <br> <a href="/blog/{id}">Home</a>'
 
     #  EDIT POST
     # MIGRATE SQL TO MODELS.PY FILE
@@ -372,8 +387,8 @@ def edit(post_id):
             title = request.form['title']
             content = request.form['content']
             privacy = request.form['privacy'].capitalize()
-            EDIT_SQL = '''UPDATE  post SET author = %s, title = %s, content = %s, privacy = %s WHERE post_id = %s'''
-            cursor.execute(EDIT_SQL, (author, title, content, privacy, post_id,))
+            EDIT_SQL = '''UPDATE  post SET title = %s, content = %s, privacy = %s WHERE post_id = %s'''
+            cursor.execute(EDIT_SQL, (title, content, privacy, post_id,))
             UPDATED_SQL = '''SELECT * FROM post WHERE post_id = %s'''
             cursor.execute(UPDATED_SQL, (post_id,))
             result = cursor.fetchall()

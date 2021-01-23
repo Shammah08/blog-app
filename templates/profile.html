@@ -9,8 +9,8 @@
              <p>
                 <h3><strong> &nbsp;{{guest_username}}'s Profile</strong></h3>
             {% else %}
-                <a href="/settings"><button class="btn btn-info" style="width:150px; float: right;margin-left: 10px">Settings </button> </a>
-                <a href="/my-to-do"><button class="btn btn-dark" style="float:right; ">ToDo List</button></a>&nbsp;&nbsp;
+                <a href="/settings"><button class="btn btn-dark" style="width:150px; float: right;margin-left: 10px">Settings </button> </a>
+                <a href="/my-to-do"><button class="btn btn-info" style="float:right;  width: 100px;">To Do</button></a>&nbsp;&nbsp;
                 <h4><strong> &nbsp;Hello {{username}}</strong></h4>
                 <a href="/blog/create">
                 <input type="button" class="btn btn-light" value="+New Post" style="width: 150px;">
@@ -38,19 +38,17 @@
             {{guest_username}} has 
             <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{mycount}}</span> public post(s)
         </a>
-        {% for content in data[2] %}
-        <strong><em><a href="/blog/{{content[2]}}/{{content[0]}}" style="text-decoration: none;">{{content[2]}} , </a></em></strong>
-        {% endfor %}
+        <em>{% for content in data[2] %}
+        <strong><a href="/blog/{{content[0]}}" style="text-decoration: none;">{{content[2].capitalize()}}-</a></strong>
+        {% endfor %}</em>  
     
         {% else %}
-        <a class="nav-link" href="#">
-            My posts
-            <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{mycount}}</span>
-            {% for item in data[1]%}
-        </a>
-        <strong><em><a href="/blog/{{item[0]}}" style="text-decoration: none;">"{{item[2]}}"</a></em></strong>
-        {% endfor %}
     
+            My posts
+            <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{mycount}}</span><br>
+          <em>{% for title in data[2] %}
+            <strong><a href="/blog/{{title[1]}}" style="text-decoration: none;"> {{title[0].capitalize()}}-</a></strong>
+         {%endfor%}</em>  
         {% endif %}
         {%endfor%}
         <hr>
