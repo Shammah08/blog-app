@@ -221,10 +221,11 @@ def setting():
         email = request.form['email']
         uname = request.form['username']
         about = request.form['about']
-        edit_profile(username, first_name, last_name, email, uname, about)
-        data = profile_data(username)
+        edit_profile(userid,first_name,last_name,email,uname,about)
+        data = profile_data(uname)
         status = 'Update Successful!!'
         return render_template('settings.html', data=data, status=status, username=username)
+
 
 
 @app.route('/blog')
@@ -328,21 +329,20 @@ def next(id):
         private_id.append(item[0])
     for item in public_posts:
         public_id.append(item[0])
-        # print(all_id)
+    print(private_id)
+    print(public_id)
     try:
         if id in public_id:
-            position = all_id.index(id)
+            position = public_id.index(id)
             nxt = position - 1
             return post(public_id[nxt])
         else:
             if id in private_id:
                 position = private_id.index(id)
-                print('Private pos', position)
-                nxt = position  - 1
-                return(post(private_id[nxt]))   
+                nxt = position - 1
+                return post(private_id[nxt])       
     except:
-        return f'<h2>An error  has occured </h2><br> <h4>Contact Support For Assistance</h4> <br> <a href="/blog/{id}">Back</a>'
-
+        return f'<h2>An error  has occured </h2><br> <h4>Contact Support For Assistance</h4> <br> <a href="/blog/{id}">Home</a>'
 
 @app.route('/blog/previous/<int:id>')
 def previous(id):
@@ -386,7 +386,10 @@ def edit(post_id):
             author =  username
             title = request.form['title']
             content = request.form['content']
-            privacy = request.form['privacy'].capitalize()
+            if request.form.getlist('yes'):
+                privacy = 'Yes'
+            else:
+                privacy = "No"
             EDIT_SQL = '''UPDATE  post SET title = %s, content = %s, privacy = %s WHERE post_id = %s'''
             cursor.execute(EDIT_SQL, (title, content, privacy, post_id,))
             UPDATED_SQL = '''SELECT * FROM post WHERE post_id = %s'''

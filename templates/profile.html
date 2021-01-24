@@ -57,7 +57,11 @@
             <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                 <div class="d-flex justify-content-between align-items-center w-100">
                     <strong class="text-gray-dark">{{user[0]}} {{user[1]}}</strong>
+                    {% if username == user[2] %}
+                    <a href="#">Visit Profile</a>
+                    {% else %}
                     <a href="/profile/guest-{{user[2]}}">Visit Profile</a>
+                    {%endif%}
                 </div>
                 <a href="/profile/guest-{{user[2]}}"><span class="d-block">@{{user[2]}}</span></a>
             </div>

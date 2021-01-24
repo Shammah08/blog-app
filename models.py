@@ -29,7 +29,6 @@ class DbManager:
 
 time_stamp = datetime.now().strftime('%c')
 
-
 # activity log func
 # sign_up function to log details in txt file
 def sign_up(fname: str, lname: str, email: str, username: str, password: str):
@@ -71,7 +70,7 @@ def log_in(username: str, password: str):
 
 def user_profile(userid):
     with DbManager(**DBCONFIG) as cursor:
-        AUTHORS_SQL = '''SELECT DISTINCT  first_name, last_name, username, id FROM users'''
+        AUTHORS_SQL = '''SELECT DISTINCT  first_name, last_name, username, userid FROM users'''
         cursor.execute(AUTHORS_SQL)
         authors = cursor.fetchall()
     count = len(get_all_posts(userid)) # GET NUMBER OF ALL POSTS IN DB
@@ -90,6 +89,7 @@ def profile_data(username):
         return cursor.fetchall()
 
 
+# TO DO LIST
 def add_to_do(userid: int, task: str, status: str) -> None:
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL =''' INSERT INTO log(Action_done, username) VALUES (%s, %s)'''
@@ -109,15 +109,14 @@ def get_to_do(user_id: int) -> tuple:
 
 def edit_to_do(user_id: int, username: str, task: str, status: str) -> tuple:
     with DbManager(**DBCONFIG) as cursor:
-        SQL = '''UPDATE ToDoTest SET task = %s, status = %s WHERE userid = %s'''
+        SQL = '''UPDATE ToDoTest SET task = %s, status = %s  WHERE userid = %s'''
         return cursor.execute(SQL, (task, status, username, user_id))
 
 
 def edit_profile(userid, first_name, last_name, email, username, about):
     with DbManager(**DBCONFIG) as cursor:
-        PROFILE_SQL = '''UPDATE users SET first_name = %s, last_name = %s,
-        email = %s, username = %s, about = %s  WHERE userid = %s '''
-        return cursor.execute(PROFILE_SQL, (first_name, last_name, email, username, about, userid))
+        EDIT_SQL = '''UPDATE users SET first_name = %s,  last_name = %s, email = %s, about = %s WHERE userid = %s'''
+        return cursor.execute(EDIT_SQL, (first_name, last_name, email, about, userid))
 
 
 # UPDATE VIEW LOG FUNcTION
@@ -127,7 +126,7 @@ def view_log(userid, password):
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
         cursor.execute(LOG_SQL, ('View log', userid))
-        USER_SQL = '''SELECT id, password FROM users  '''
+        USER_SQL = '''SELECT userid, password FROM users  '''
         cursor.execute(USER_SQL)
         users = dict(cursor.fetchall())
         if userid in users:
@@ -177,7 +176,7 @@ def get_all_posts(userid: int) -> 'Posts':
     with DbManager(**DBCONFIG) as cursor:
         LOG_SQL = """INSERT INTO  log (Action_done ,username) VALUES(%s,%s)"""
         cursor.execute(LOG_SQL, ('Get Posts', userid))
-        USERS = '''SELECT DISTINCT  first_name, last_name, username,id FROM users'''
+        USERS = '''SELECT DISTINCT  first_name, last_name, username,userid FROM users'''
         cursor.execute(USERS)
         users = cursor.fetchall()
         ALL_PERSONAL_POSTS = """ SELECT * FROM post  WHERE user_id = %s  ORDER BY date DESC"""

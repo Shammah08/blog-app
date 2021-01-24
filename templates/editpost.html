@@ -14,8 +14,19 @@
             <h4>Title: </h4><input type="text" name="title" class="form-control" value='{{item[2]}}' style="width: 200px;"><br>
             <h4>Content</h4>
             <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows='20' >{{item[3]}}</textarea><br>
-            <small><strong>Privacy: <input type="text" name="privacy" value = "{{item[6]}}" style="width: 60px;"></strong></small>
-            <input type="submit" value="Save Changes" class="btn btn-success " style="width: 200px; margin-left: 200px;">
+
+            <div style="margin-left: 50px">
+                <strong>Private: &nbsp;
+                    <label for="yes" >
+                        Yes &nbsp;&nbsp;<input type="checkbox" name="yes" value="yes"><br>
+                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label for="no">
+                        No &nbsp;&nbsp;<input type="checkbox" name='no' value="no"><br>
+                    </label>
+                </strong>
+                <input type="submit" value="Save Changes" class="btn btn-success " style="width: 200px; margin-left: 200px;">
+            </div>
+           
         </form>
     </div>
     {% endfor %}
