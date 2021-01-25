@@ -33,8 +33,9 @@ time_stamp = datetime.now().strftime('%c')
 # sign_up function to log details in txt file
 def sign_up(fname: str, lname: str, email: str, username: str, password: str):
     with DbManager(**DBCONFIG) as cursor:
-        LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL, ('Sign up', username))
+        ACTIVITY_LOG = '''INSERT INTO activity(username, log_action, log_detail)
+        VALUES (%s,%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(username,'Sign Up',str(fname,lname)))
         SQL = '''INSERT INTO users (first_name,last_name, email,username,password) 
         VALUES (%s,%s,%s,%s,%s)'''
         return cursor.execute(SQL, (fname, lname, email, username, password))
@@ -45,22 +46,29 @@ def sign_up(fname: str, lname: str, email: str, username: str, password: str):
 
 def log_in(username: str, password: str):
     with DbManager(**DBCONFIG) as cursor:
-        LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL, ('Log in', username))
         USER_SQL = '''SELECT username, password FROM users  '''
         cursor.execute(USER_SQL)
         users = dict(cursor.fetchall())
         for user in users:
             if username in users:
                 if users[username] == hashlib.sha256(password.encode()).hexdigest():
+                    ACTIVITY_LOG = '''INSERT INTO activity(username, log_action, log_detail)
+                    VALUES (%s,%s,%s)'''
+                    cursor.execute(ACTIVITY_LOG,(username,'Log In','Success'))
                     SQL = '''SELECT * FROM post WHERE author  = %s'''
                     posts = cursor.execute(SQL, (username,))
                     return posts
                 # TO GET  POST WRITTEN BY USERNAME
                 else:
+                    ACTIVITY_LOG = '''INSERT INTO activity(username, log_action, log_detail)
+                    VALUES (%s,%s,%s)'''
+                    cursor.execute(ACTIVITY_LOG,(username,'Log In','Wrong Password'))
                     response = 'Wrong password!!'
                     return response
         else:
+            ACTIVITY_LOG = '''INSERT INTO activity(username, log_action, log_detail)
+            VALUES (%s,%s,%s)'''
+            cursor.execute(ACTIVITY_LOG,(username,'Log In','User Not Found'))
             response = 'Username not found!!'
             return response
 
@@ -84,6 +92,9 @@ def user_profile(userid):
 
 def profile_data(username):
     with DbManager(**DBCONFIG) as cursor:
+        ACTIVITY_LOG = '''INSERT INTO activity(username, log_action)
+        VALUES (%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(username,'Profile Visit'))
         PROFILE_SQL = '''SELECT * FROM users WHERE username = %s'''
         cursor.execute(PROFILE_SQL, (username,))
         return cursor.fetchall()
@@ -92,8 +103,9 @@ def profile_data(username):
 # TO DO LIST
 def add_to_do(userid: int, task: str, status: str) -> None:
     with DbManager(**DBCONFIG) as cursor:
-        LOG_SQL =''' INSERT INTO log(Action_done, username) VALUES (%s, %s)'''
-        cursor.execute(LOG_SQL,('Add to-do Item', userid))
+        ACTIVITY_LOG = '''INSERT INTO activity(userid, log_action, log_detail)
+        VALUES (%s,%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(userid,'To-Do',status))
         SQL = '''INSERT INTO ToDoTest (TaskName, TaskStatus, userid) VALUES (%s, %s, %s) '''
         return cursor.execute(SQL, (task, status, userid))
         
@@ -107,14 +119,20 @@ def get_to_do(user_id: int) -> tuple:
         return cursor.fetchall()
 
 
-def edit_to_do(user_id: int, username: str, task: str, status: str) -> tuple:
+def edit_to_do(id: int, username: str, task: str, status: str) -> tuple:
     with DbManager(**DBCONFIG) as cursor:
-        SQL = '''UPDATE ToDoTest SET task = %s, status = %s  WHERE userid = %s'''
-        return cursor.execute(SQL, (task, status, username, user_id))
+        ACTIVITY_LOG = '''INSERT INTO activity(username, log_action, log_detail)
+        VALUES (%s,%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(username,'Edit To-Do', id))
+        SQL = '''UPDATE ToDoTest SET task = %s, status = %s  WHERE id = %s'''
+        return cursor.execute(SQL, (task, status, username, id))
 
 
 def edit_profile(userid, first_name, last_name, email, username, about):
     with DbManager(**DBCONFIG) as cursor:
+        ACTIVITY_LOG = '''INSERT INTO activity(userid, username, log_action)
+        VALUES (%s,%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(userid,username,'Edit Profile'))
         EDIT_SQL = '''UPDATE users SET first_name = %s,  last_name = %s, email = %s, about = %s WHERE userid = %s'''
         return cursor.execute(EDIT_SQL, (first_name, last_name, email, about, userid))
 
@@ -124,8 +142,6 @@ def edit_profile(userid, first_name, last_name, email, username, about):
 
 def view_log(userid, password):
     with DbManager(**DBCONFIG) as cursor:
-        LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL, ('View log', userid))
         USER_SQL = '''SELECT userid, password FROM users  '''
         cursor.execute(USER_SQL)
         users = dict(cursor.fetchall())
@@ -134,11 +150,20 @@ def view_log(userid, password):
                 SQL = '''SELECT * FROM log ORDER BY id DESC'''
                 cursor.execute(SQL)
                 log_data = cursor.fetchall()
+                ACTIVITY_LOG = '''INSERT INTO activity(userid, log_action, log_detail)
+                VALUES (%s,%s,%s)'''
+                cursor.execute(ACTIVITY_LOG,(userid,'View Log', 'Success'))
                 return log_data
             else:
+                ACTIVITY_LOG = '''INSERT INTO activity(userid, log_action, log_detail)
+                VALUES (%s,%s,%s)'''
+                cursor.execute(ACTIVITY_LOG,(userid,'View Log', 'Wrong passord'))
                 response = "WRONG PASSWORD!!"
                 return response
         else:
+            ACTIVITY_LOG = '''INSERT INTO activity(userid, log_action, log_detail)
+            VALUES (%s,%s,%s)'''
+            cursor.execute(ACTIVITY_LOG,(userid,'View Log', 'Restricted Access'))
             abort(401)
 
 
@@ -147,8 +172,9 @@ def view_log(userid, password):
 
 def create_post(author, title, content, privacy, userid: int) -> None:
     with DbManager(**DBCONFIG) as cursor:
-        LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL, ('Create post', author))
+        ACTIVITY_LOG = '''INSERT INTO activity(userid,username, log_action, log_detail)
+        VALUES (%s,%s,%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(userid,author,'Create Post', title))
         SQL = '''INSERT INTO post(author, title, content,user_id,privacy) VALUES (%s,%s,%s,%s, %s)'''
         return cursor.execute(SQL, (author, title, content, userid, privacy))
 
@@ -167,6 +193,19 @@ def private_post(userid: int) -> list:
         return [post_id, all_post]
 
 
+#  POST COMMENT
+
+
+def comment(userid: int,username:str , post_id: int, comment: str)  ->None:
+    with DbManager(**DBCONFIG) as cursor:
+        ACTIVITY_LOG = '''INSERT INTO activity(userid,username, log_action, log_detail)
+        VALUES (%s,%s,%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(userid,username,'Comment',post_id))
+        LOG_SQL = """INSERT INTO  log (Action_done ,username) VALUES(%s,%s)"""
+        cursor.execute(LOG_SQL, ('Comment', userid))
+        SQL = ''' INSERT INTO comments (userid, post_id, comment_body) VALUES (%s, %s, %s)'''
+        return cursor.execute(SQL,(userid,post_id,comment))
+
 
 # GET POST FROM DB
 
@@ -174,8 +213,9 @@ def private_post(userid: int) -> list:
 def get_all_posts(userid: int) -> 'Posts':
     # CHECK USER ID AND RETURN PUBLIC AND ALL USER ID'S POST
     with DbManager(**DBCONFIG) as cursor:
-        LOG_SQL = """INSERT INTO  log (Action_done ,username) VALUES(%s,%s)"""
-        cursor.execute(LOG_SQL, ('Get Posts', userid))
+        ACTIVITY_LOG = '''INSERT INTO activity(userid, log_action)
+        VALUES (%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(userid,'Get Posts'))
         USERS = '''SELECT DISTINCT  first_name, last_name, username,userid FROM users'''
         cursor.execute(USERS)
         users = cursor.fetchall()
@@ -205,38 +245,44 @@ def post_privacy(status):  # UNUSED FUNCTION
 # FIX BUG
 
 
-def db_search(keyword):
+def db_search(userid: int, keyword: str) -> tuple:
     with DbManager(**DBCONFIG) as cursor:
-        LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL, ('Search', keyword))
+        ACTIVITY_LOG = '''INSERT INTO activity(userid, log_action, log_detail)
+        VALUES (%s,%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(userid,'Search', keyword))
         SQL_POST = """SELECT content FROM  post WHERE content  LIKE '%s' """
         cursor.execute(SQL_POST,keyword)
         posts = cursor.fetchall()
         SQL_AUTHORS = """SELECT DISTINCT author FROM post WHERE content LIKE  '%s' """
         cursor.execute(SQL_AUTHORS, keyword)
         authors = cursor.fetchall()
-        return authors, posts
+        return (authors, posts)
 
 
-def edit_post(userid):
+def edit_post(userid: int,post_id: int, author: str, title: str, content: str, privacy: str) -> list: #UNUSED FUNCTION
     with DbManager(**DBCONFIG) as cursor:
-        LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL, ('Edit post', userid))
-        SQL = '''SELECT * FROM post WHERE post_id  = %s'''
-        cursor.execute(SQL, userid)
-        post = cursor.fetchall()
-        content = []
-        for i in post:
-            content.append(i)
-        return content
+        ACTIVITY_LOG = '''INSERT INTO activity(userid, username, log_action, log_detail)
+        VALUES (%s,%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(userid,username,'Edit Post', title))
+        EDIT_SQL = '''UPDATE  post SET title = %s, content = %s, privacy = %s WHERE post_id = %s'''
+        cursor.execute(EDIT_SQL, (title, content, privacy, post_id))
+        UPDATED_SQL = '''SELECT * FROM post WHERE post_id = %s'''
+        cursor.execute(UPDATED_SQL, (post_id,))
+        return cursor.fetchall()
+
+def get_edit_post(userid: int, postid: int, title) -> tuple:
+    SQL = '''SELECT * FROM post WHERE post_id = %s'''
+    cursor.execute(SQL, (post_id,))
+    return cursor.fetchall()
 
 
-def delete_post(id):
+def delete_post(userid: int, id: int) ->None:
     with DbManager(**DBCONFIG) as cursor:
-        LOG_SQL = '''INSERT INTO  log (Action_done,username) VALUES(%s,%s)'''
-        cursor.execute(LOG_SQL, ('Delete post', id))
-        delete = '''DELETE FROM post WHERE post_id  = %s'''
-        cursor.execute(delete, (id,))
+        ACTIVITY_LOG = '''INSERT INTO activity(userid, username,log_action,log_detai)
+        VALUES (%s,%s,%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(userid, username, 'Delete Post', title))
+        DELETE_SQL = '''DELETE FROM post WHERE post_id  = %s'''
+        cursor.execute(DELETE_SQL, (id,))
         return redirect(url_for('blog'))
     # generate number and asks user to guess
 

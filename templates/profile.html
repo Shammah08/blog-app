@@ -4,10 +4,9 @@
 <main>
     {% for detail in profile %}
     <div class="container">
-        
             {% if username != detail[4] %}
-             <p>
-                <h3><strong> &nbsp;{{guest_username}}'s Profile</strong></h3>
+             <p><h3><strong> &nbsp;{{detail[1].capitalize()}} {{detail[2].capitalize()}}'s profile</strong></h3>
+                &nbsp;&nbsp;&nbsp;<a href="/profile/guest-{{guest_username}}"><small>{{guest_username.capitalize()}}</small></a>
             {% else %}
                 <a href="/settings"><button class="btn btn-dark" style="width:150px; float: right;margin-left: 10px">Settings </button> </a>
                 <a href="/my-to-do"><button class="btn btn-info" style="float:right;  width: 100px;">To Do</button></a>&nbsp;&nbsp;
@@ -17,16 +16,12 @@
                  </a>
             </p>
             {% endif %}
-        <article style="white-space: pre-wrap; height: 200px;">
-            {{detail[7]}}
-        </article>
+        <article style="white-space: pre-wrap; height: 200px;">{{detail[7]}}</article>
         &nbsp; &nbsp; &nbsp;<em style="color: rgb(0, 0, 0);">Get in touch!</em><br>
         <div class="action" style="display: flex; flex: 1;">
             &nbsp; &nbsp; &nbsp;<a href="mailto:{{detail[3]}}"><button class="btn btn-dark">Send
                     Mail</button></a>&nbsp;&nbsp;
             <a href="tel:0795058630"><button class="btn btn-info" style="width:100px;">Call</button></a>
-
-
         </div>
         {%endfor%}
 
@@ -56,7 +51,7 @@
 {% for user in data[3]%}
             <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                 <div class="d-flex justify-content-between align-items-center w-100">
-                    <strong class="text-gray-dark">{{user[0]}} {{user[1]}}</strong>
+                    <strong class="text-gray-dark">{{user[0].capitalize()}} {{user[1].capitalize()}}</strong>
                     {% if username == user[2] %}
                     <a href="#">Visit Profile</a>
                     {% else %}

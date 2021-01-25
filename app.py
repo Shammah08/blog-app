@@ -170,14 +170,20 @@ def admin():
 @app.route('/adminpanel')
 def admin_panel():
     title = 'Admin Panel'
+    username= session['username']
+    userid= session['userid']
+
     with DbManager(**DBCONFIG) as cursor:
+        ACTIVITY_LOG = '''INSERT INTO activity(userid,username, log_action)
+        VALUES (%s,%s,%s)'''
+        cursor.execute(ACTIVITY_LOG,(userid,username,'Admin Panel'))
         USERS_SQL = '''SELECT * FROM users'''
         cursor.execute(USERS_SQL)
         users = cursor.fetchall()
         COMMENT_SQL = '''SELECT * FROM comments'''
         cursor.execute(COMMENT_SQL)
         comments = cursor.fetchall()
-        LOG_SQL = '''SELECT * FROM log'''
+        LOG_SQL = '''SELECT * FROM activity'''
         cursor.execute(LOG_SQL)
         logs = cursor.fetchall()
         POST_SQL = '''SELECT * FROM post'''
@@ -227,7 +233,6 @@ def setting():
         return render_template('settings.html', data=data, status=status, username=username)
 
 
-
 @app.route('/blog')
 def blog():
     title = 'Blog'
@@ -241,7 +246,16 @@ def blog():
         return render_template('error.html', title=title)
 
 
-# CREATE NEW POST
+# COMMENT
+@app.route('/comment/<int:post_id>', methods=['POST'])
+def comments(post_id):
+    userid = session['userid']
+    content = request.form['comment']
+    comment(userid,username,post_id, content)
+    return  post(post_id)
+
+
+# CREATE NEW POST 
 @app.route('/blog/create', methods=['GET', 'POST'])
 def create():
     title = 'New Post'
@@ -286,9 +300,10 @@ def play():
 
 @app.route('/search/<keyword>', methods=['POST'])
 def search(keyword):
+    userid = session['userid']
     title = f'Results for {keyword}'
     keyword = request.form['keyword']
-    result = db_search(keyword)
+    result = db_search(userid,keyword)
     authors = result[0]
     posts = result[1]
     return render_template('result.html', authors=authors, posts=posts, keyword=keyword, title=title)
@@ -302,14 +317,16 @@ def post(id):
     username = session['username']
     userid = session['userid']
     data = get_all_posts(userid)
+    users = user_profile(userid)
     count = len(data[1])
     with DbManager(**DBCONFIG) as cursor:
         SQL = '''SELECT * FROM post WHERE post_id = %s'''
+        COMMENT_SQL  = '''SELECT * FROM comments WHERE post_id = %s'''
         cursor.execute(SQL, (id,))
         content = cursor.fetchall()
-        # title = content[0][2]
-
-        return render_template('post.html', content=content, count=count, username=username, )
+        cursor.execute(COMMENT_SQL,(id,))
+        comments = cursor.fetchall()
+        return render_template('post.html', content=content, count=count,users=users, username=username,comments=comments )
 
 
 # BLOG NAVIGATION
@@ -329,8 +346,6 @@ def next(id):
         private_id.append(item[0])
     for item in public_posts:
         public_id.append(item[0])
-    print(private_id)
-    print(public_id)
     try:
         if id in public_id:
             position = public_id.index(id)
@@ -341,8 +356,8 @@ def next(id):
                 position = private_id.index(id)
                 nxt = position - 1
                 return post(private_id[nxt])       
-    except:
-        return f'<h2>An error  has occured </h2><br> <h4>Contact Support For Assistance</h4> <br> <a href="/blog/{id}">Home</a>'
+    except  Exception as error:
+        return f'<h2>An error  has occured </h2><br>{error} <br><h4>Contact Support For Assistance</h4> <br> <a href="/blog/{id}">Home</a>'
 
 @app.route('/blog/previous/<int:id>')
 def previous(id):
@@ -357,8 +372,6 @@ def previous(id):
         private_id.append(item[0])
     for item in public_posts:
         public_id.append(item[0])
-    print(private_id)
-    print(public_id)
     try:
         if id in public_id:
             position = public_id.index(id)
@@ -369,48 +382,41 @@ def previous(id):
                 position = private_id.index(id)
                 prev = position + 1
                 return post(private_id[prev])       
-    except:
-        return f'<h2>An error  has occured </h2><br> <h4>Contact Support For Assistance</h4> <br> <a href="/blog/{id}">Home</a>'
+    except Exception as error:
+        return f'<h2>An error  has occured </h2><br>{error}<br> <h4>Contact Support For Assistance</h4> <br> <a href="/blog/{id}">Home</a>'
 
     #  EDIT POST
     # MIGRATE SQL TO MODELS.PY FILE
 
 
-@app.route('/blog/edit/<int:post_id>', methods=['GET', 'POST'])
+@app.route('/blog/edit/<int:post_id>/title', methods=['GET', 'POST'])
 def edit(post_id):
     username = session['username']
     userid = session['userid']
     count = len(get_all_posts(userid)[1])
-    with DbManager(**DBCONFIG) as cursor:
-        if request.method == 'POST':
-            author =  username
-            title = request.form['title']
-            content = request.form['content']
-            if request.form.getlist('yes'):
-                privacy = 'Yes'
-            else:
-                privacy = "No"
-            EDIT_SQL = '''UPDATE  post SET title = %s, content = %s, privacy = %s WHERE post_id = %s'''
-            cursor.execute(EDIT_SQL, (title, content, privacy, post_id,))
-            UPDATED_SQL = '''SELECT * FROM post WHERE post_id = %s'''
-            cursor.execute(UPDATED_SQL, (post_id,))
-            result = cursor.fetchall()
-            return render_template('post.html', content=result, count=count, username=username)
+    if request.method == 'POST':
+        author =  username
+        title = request.form['title']
+        content = request.form['content']
+        if request.form.getlist('yes'):
+            privacy = 'Yes'
         else:
-            LOG_SQL =''' INSERT INTO log (Action_done, username) VALUES (%s, %s)'''
-            cursor.execute(LOG_SQL,(f'Edit post {post_id}',username))
-            SQL = '''SELECT * FROM post WHERE post_id = %s'''
-            cursor.execute(SQL, (post_id,))
-            content = cursor.fetchall()
-            return render_template('editpost.html', post=content, username=username)
+            privacy = "No"
+            content = edit_post(userid,post_id,title,content,privacy)
+        return render_template('post.html', content=result, count=count, username=username)
+    else:
+        content = get_edit_post(userid,postid,title)
+        return render_template('editpost.html', post=content, username=username)
 
 
 # DELETE POST
 
 
-@app.route('/blog/delete/<int:id>')
-def delete(id):
-    return delete_post(id)
+@app.route('/blog/delete/<int:id>/<title>')
+def delete(id, title):
+    userid = session['userid']
+    username = session['username']
+    return delete_post(userid,username, id, title)
 
 
 @app.route('/play/search', methods=['POST'])

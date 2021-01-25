@@ -41,12 +41,22 @@
         {% endif %}
     </div>
     <br><br>
-    <div class="comment" style="display: inline;"></div>
-    <form action="" style="text-align: center;">
-        <textarea placeholder="Add comment" rows="2" cols="auto" name="comment"
-            style="display: inline; border: none; font-size: 12px;"></textarea>
-        <input type="submit" style="border: none; display: inline;" class="btn btn-light" value="Comment">
-    </form><br><br><br>
+    <!--Loop throug all comments retrieved from DB-->
+    <div class="container" style="text-align: center; background-color: rgb(175, 241, 252); width: max-content; border-radius: 10px;" >
+        {% for comment in comments %}
+        {% for user in users[3] %}
+        {% if comment[2]== user[3] %}
+        <small><a href="/profile/guest-{{user[2]}}" style="float: left;"><strong> {{user[2]}}</strong></a> 
+     {{comment[3]}}<em style="float: right; font-size: 11px;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{comment[4].strftime('%A %d, %H:%M %p, %Y')}}</em></small><br>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+        <form action="/comment/{{item[0]}}" style="text-align: center;" method="POST"><br>
+            <textarea placeholder="Add comment" rows="2" cols="50px" name="comment"
+                style="display: inline; border: none; font-size: 12px;"></textarea>
+            <input type="submit" style="border: none; display: inline;" class="btn btn-light" value="Comment">
+        </form>
+   
     {% endfor %}
 </div>
 
