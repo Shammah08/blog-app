@@ -10,7 +10,7 @@
         <h2 style="display: inline;">Edit Post</h2>
     <br><br>
     <div class="form-group">
-        <form action="/blog/edit/{{item[0]}}" method="POST">
+        <form action="/blog/edit/{{item[0]}}/{{item[2]}}" method="POST">
             <h4>Title: </h4><input type="text" name="title" class="form-control" value='{{item[2]}}' style="width: 200px;"><br>
             <h4>Content</h4>
             <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows='20' >{{item[3]}}</textarea><br>

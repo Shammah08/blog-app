@@ -1,18 +1,20 @@
 {%extends 'base.html'%}
 
 {%block body %}
+
 {% for item in content %}
 <div id="header" style="font-family: monospace;  font-size: 16px; " class="container">
     <div style="display: flex; justify-content: flex-start; " class="float-left">
         <form action="#">
             <a href='/blog/previous/{{item[0]}}'><input type="button" value="Previous" style="width: 100px; "
                     class="btn btn-dark"></a>&nbsp;&nbsp;&nbsp;
-        </form></div>
-        <div class="float-right">
-            <form action="#"> 
+        </form>
+    </div>
+    <div class="float-right">
+        <form action="#">
             <a href='/blog/next/{{item[0]}}'><input type="button" value="Next" style=" width: 100px;"
                     class="btn btn-light"></a><br><br>
-          </form>
+        </form>
     </div><br>
     <h2 style="text-align:center ;">{{item[2]}}</h2>
     <div class="form-group">
@@ -22,44 +24,51 @@
     </div>
     <article class="form-control" name="content" id="exampleFormControlTextarea1" rows='20'
         style="white-space: pre-wrap; ">{{item[3]}}</article><br>
-    {% if item[1] == username  or username == 'Admin'  %}
-    {% for item in content %}
-
+    {% if item[1] == username or username == 'Admin' %}
     <!--Privacy-->
     <strong><small><em>Private: {{item[6].capitalize()}}</em></small></strong>
     <div style="display: flex; justify-content: flex-start; " class="float-right">
-{% endfor %}
-<!--User controls     Delete and Edit functions-->
+        <!--User controls     Delete and Edit functions-->
         <form method="POST">
-            <a href='/blog/delete/{{item[0]}}'><input type="button" value="Delete" style="width: 100px; "
+            <a href='/blog/delete/{{item[0]}}/{{item[2]}}'><input type="button" value="Delete" style="width: 100px; "
                     class="btn btn-danger"></a>&nbsp;&nbsp;&nbsp;
-                    {% if item[1] == username %}
-            <a href='/blog/edit/{{item[0]}}'><input type="button" value="Edit" style=" width: 100px;"
-                    class="btn btn-primary"></a><br><br>
-                {% endif %}
+            {% if item[1] == username %}
+            <a href='/blog/edit/{{item[0]}}/{{item[2]}}'><input type="button" value="Edit" style=" width: 100px;"
+                    class="btn btn-primary"></a>
+            {% endif %}
         </form>
         {% endif %}
+        
     </div>
+    <!--Loop through all comments retrieved from DB-->
     <br><br>
-    <!--Loop throug all comments retrieved from DB-->
-    <div class="container" style="text-align: center; background-color: rgb(175, 241, 252); width: max-content; border-radius: 10px;" >
+    <div class="container"
+        style="text-align: center; background-color: rgb(175, 241, 252); width: max-content; border-radius: 10px;">
+        <br>
         {% for comment in comments %}
         {% for user in users[3] %}
         {% if comment[2]== user[3] %}
-        <small><a href="/profile/guest-{{user[2]}}" style="float: left;"><strong> {{user[2]}}</strong></a> 
-     {{comment[3]}}<em style="float: right; font-size: 11px;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{comment[4].strftime('%A %d, %H:%M %p, %Y')}}</em></small><br>
+        <small><a href="/profile/guest-{{user[2]}}" style="float: left;"><strong> {{user[2]}}</strong></a>
+            &nbsp;&nbsp;&nbsp;<article style="text-align: left;">{{comment[3]}}</article><em
+                style="float: right; font-size: 12px;"> &nbsp;&nbsp;&nbsp;
+                {{comment[4].strftime('%a %d, %H:%M %p, %Y')}}
+                {% if comment[2] == userid or username == 'Admin'  %}
+                <a href="'/comment/{{comment[1]}}/{{comment[0]}}/{{comment[3]}}"
+                    style="text-decoration: none;">Del</a>
+                {% endif %}
+                </em></small>
         {% endif %}
         {% endfor %}
         {% endfor %}
+
         <form action="/comment/{{item[0]}}" style="text-align: center;" method="POST"><br>
             <textarea placeholder="Add comment" rows="2" cols="50px" name="comment"
                 style="display: inline; border: none; font-size: 12px;"></textarea>
             <input type="submit" style="border: none; display: inline;" class="btn btn-light" value="Comment">
         </form>
-   
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
+    <br>
 
 
-
-{%endblock%}
+    {%endblock%}

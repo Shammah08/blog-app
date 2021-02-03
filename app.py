@@ -64,7 +64,6 @@ def profile():
         username = session['username']
         data_profile = profile_data(username)
         data = user_profile(userid)
-    
         posts = get_all_posts(userid)
         count = len(posts[1])
         mycount = len(posts[0])
@@ -107,6 +106,17 @@ def to_do_create(username, userid):
     return redirect(url_for('my-to-do'))
 
 
+@app.route('/task/<int:taskid>/delete')
+def delete_task(taskid: int):
+    username = session['username']
+    userid = session['userid']
+    task_delete(taskid,username,userid)
+    return redirect(url_for('my_to_do'))
+
+@app.route('/task/<int:taskid>/edit')
+def edit_task(taskid: int):
+    return  edit_to_do(taskid,username,task,status)
+
 # VISIT ANY USERS PROFILE AS GUEST
 
 
@@ -138,62 +148,23 @@ def guest_profile(guest_username):
 # ADMIN PAGE
 
 
-@app.route('/admin', methods=['POST', 'GET'])
-def admin():
+@app.route('/adminpanel')
+def admin_panel():
     title = 'Administration'
     userid = session['userid']
+    username= session['username']
     try:
         # check session name
         status = f"You are logged in as {session['username']}"
         if session['username'] == 'Admin':
-            if request.method == 'GET':
-                return render_template('admin.html', status=status, title=title)
-            else:
-                # give password to view log
-                code = request.form['password']
-                password = hashlib.sha256(f'{str(code)}'.encode()).hexdigest()
-                log_data = view_log(session['userid'], password)
-                if log_data == 'WRONG PASSWORD!!':
-                    return render_template('admin.html', response=log_data, status=status, title=title)
-                else:
-                    return render_template('admin.html', log_data=log_data, status=status, title=title)
+            data = admin(username, userid)
+            return render_template('adminpanel.html', data=data)
+
         else:
             # standard user error
             return abort(401)
     except KeyError:
         return render_template('error.html', title=title)
-
-
-# MIGRATE THE SQL QUERIES TO THE Methods.py FILE
-
-
-@app.route('/adminpanel')
-def admin_panel():
-    title = 'Admin Panel'
-    username= session['username']
-    userid= session['userid']
-
-    with DbManager(**DBCONFIG) as cursor:
-        ACTIVITY_LOG = '''INSERT INTO activity(userid,username, log_action)
-        VALUES (%s,%s,%s)'''
-        cursor.execute(ACTIVITY_LOG,(userid,username,'Admin Panel'))
-        USERS_SQL = '''SELECT * FROM users'''
-        cursor.execute(USERS_SQL)
-        users = cursor.fetchall()
-        COMMENT_SQL = '''SELECT * FROM comments'''
-        cursor.execute(COMMENT_SQL)
-        comments = cursor.fetchall()
-        LOG_SQL = '''SELECT * FROM activity'''
-        cursor.execute(LOG_SQL)
-        logs = cursor.fetchall()
-        POST_SQL = '''SELECT * FROM post'''
-        cursor.execute(POST_SQL)
-        posts = cursor.fetchall()
-        UPLOAD_SQL = '''SELECT * FROM uploads '''
-        cursor.execute(UPLOAD_SQL)
-        uploads = cursor.fetchall()
-        return render_template('adminpanel.html', users=users, comments=comments, logs=logs, posts=posts,
-                               uploads=uploads, title=title)
 
 
 @app.route('/signup', methods=['POST', 'GET'])
@@ -246,12 +217,21 @@ def blog():
         return render_template('error.html', title=title)
 
 
-# COMMENT
+# CREATE COMMENT
 @app.route('/comment/<int:post_id>', methods=['POST'])
 def comments(post_id):
     userid = session['userid']
+    username = session['username']
     content = request.form['comment']
     comment(userid,username,post_id, content)
+    return  post(post_id)
+
+# DELETE COMMENT
+@app.route('/comment/<int:post_id>/<int:comment_id>/<comment>')
+def del_comments(post_id: int,comment_id: int, comment: str) ->None:
+    userid = session['userid']
+    username = session['username']
+    del_comment(userid,username,comment_id,comment, post_id)
     return  post(post_id)
 
 
@@ -278,6 +258,25 @@ def create():
             return redirect(url_for('blog'))
 
 
+#ALL MY POSTS
+
+
+@app.route('/<username>/myposts')
+def myposts(username):
+    print(username, session['username'])
+    if username == session['username']:
+        userid = session['userid']
+        posts = get_all_posts(userid)[0]
+        count = len(posts[0])
+        return render_template('myposts.html', posts=posts, count=count, username=username)
+    else:
+        active_username = session['username']
+        user = profile_data(username)
+        userid = user[0][0]
+        profile_username = user[0][4]
+        posts = get_all_posts(userid)[2]
+        return render_template('myposts.html', posts=posts, username=active_username,profile_username=profile_username)
+
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -301,12 +300,15 @@ def play():
 @app.route('/search/<keyword>', methods=['POST'])
 def search(keyword):
     userid = session['userid']
-    title = f'Results for {keyword}'
+    username = session['username']
     keyword = request.form['keyword']
-    result = db_search(userid,keyword)
-    authors = result[0]
-    posts = result[1]
-    return render_template('result.html', authors=authors, posts=posts, keyword=keyword, title=title)
+    title = f'Results for {keyword}'
+    result = db_search(userid, username, keyword)
+    users = [len(result[0]), result[0]]
+    posts = (len(result[1]), result[1])
+    titles = (len(result[2]), result[2])
+    comments = (len(result[3]), result[3])
+    return render_template('result.html', users=users, posts=posts, titles=titles, comments=comments, keyword=keyword, title=title, username=username)
 
 
 # GET POST
@@ -326,7 +328,7 @@ def post(id):
         content = cursor.fetchall()
         cursor.execute(COMMENT_SQL,(id,))
         comments = cursor.fetchall()
-        return render_template('post.html', content=content, count=count,users=users, username=username,comments=comments )
+        return render_template('post.html', content=content, count=count,users=users, username=username, userid=userid, comments=comments )
 
 
 # BLOG NAVIGATION
@@ -386,11 +388,10 @@ def previous(id):
         return f'<h2>An error  has occured </h2><br>{error}<br> <h4>Contact Support For Assistance</h4> <br> <a href="/blog/{id}">Home</a>'
 
     #  EDIT POST
-    # MIGRATE SQL TO MODELS.PY FILE
 
 
-@app.route('/blog/edit/<int:post_id>/title', methods=['GET', 'POST'])
-def edit(post_id):
+@app.route('/blog/edit/<int:post_id>/<title>', methods=['GET', 'POST'])
+def edit(post_id, title):
     username = session['username']
     userid = session['userid']
     count = len(get_all_posts(userid)[1])
@@ -402,10 +403,10 @@ def edit(post_id):
             privacy = 'Yes'
         else:
             privacy = "No"
-            content = edit_post(userid,post_id,title,content,privacy)
-        return render_template('post.html', content=result, count=count, username=username)
+        edit_post(userid,post_id, username, title,content,privacy)
+        return post(post_id)
     else:
-        content = get_edit_post(userid,postid,title)
+        content = get_edit_post(userid,post_id,title)
         return render_template('editpost.html', post=content, username=username)
 
 
@@ -416,7 +417,8 @@ def edit(post_id):
 def delete(id, title):
     userid = session['userid']
     username = session['username']
-    return delete_post(userid,username, id, title)
+    delete_post(userid,username, id, title)
+    return redirect(url_for('blog'))
 
 
 @app.route('/play/search', methods=['POST'])

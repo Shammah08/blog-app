@@ -2,9 +2,9 @@
 
 {%block body %}
 <div class="container">
-   <strong> USERS IN THE SYS.</strong>
+   <h3><strong> Users:</strong></h3>
     <div class="row">
-        {% for user in users %}
+        {% for user in data[0] %}
       <div class="col">
         <ul>
           <li>
@@ -26,26 +26,25 @@
       {% endfor %}
     </div>
    <br><hr>
-   <strong>All public posts:<br></strong>
+  <h3> <strong>Posts:<br></strong></h3>
     <div class="row">
-      {% for post in posts %}
+      {% for post in data[3] %}
 
         <a href="\blog\{{post[0]}}"> {{post[2]}}&nbsp; </a>  ID: {{post[0]}} &nbsp;
 
       {% endfor %}
     </div>
     <hr>
-    
+    <h3><strong>Uploads:</strong></h3>
     <div class="row">
-       <strong>Upload section :</strong>
-        {% for upload in uploads %}
-        ->{{uploads}}
+        {% for upload in data[4]%}
+        {{uploads}}
         {% endfor %}
       </div>
       <hr>
-      <strong> Comment  section:</strong>
+      <h3><strong> Comments:</strong></h3>
       <div class="row">
-        {% for comment in comments %}
+        {% for comment in data[1] %}
         <ul>
           <li>
             User ID: {{comment[2]}}
@@ -57,37 +56,41 @@
             Comment: {{comment[3]}}
           </li>
           <li>
-            Date: {{comment[4].strftime('%A %d, %H:%M%p, %Y')}}
+            Date: {{comment[4].strftime('%a %d, %H:%M%p, %Y')}}
           </li>
         </ul>
        
       
         {% endfor %}
       </div>
-      <div class="col">
+      <hr>
+    <h3><strong> Activity</strong></h3>
+      <div class="row">
+
+        {% for log in data[2] %}
+        <ul>
+          <li>
+            ID: {{log[0]}}
+          </li> <li>
+            User ID: {{log[1]}}
+          </li>
+          <li>
+            Username:<a href="\profile\guest-{{log[2]}}">{{log[2]}}</a>
+          </li>
+          <li>
+            Action: {{log[3]}}
+          </li>
+          <li>
+            Detail: {{log[4]}}
+          </li>
+          <li>
+            Time: {{log[5].strftime('%a %d, %H:%M%p, %Y')}}
+          </li>
+        </ul>
+       
+      
+        {% endfor %}
         3 of 3
       </div>
-      {{post}}
     </div>
-    <div class="container">
-      <hr>
-        <h3>Log item:</h3><br>
-       
-        <table style="border: 1px solid black;">
-          <tr>
-            <td>ID</td> <td>User ID</td><td> Username</td><td> Action</td><td> Details</td><td> Time</td>
-          </tr>
-          {% for log in logs %}
-          <tr>
-            <td style="border: 1px solid black;">{{log[0]}}</td>   <!--ID-->
-            <td style="border: 1px solid black;"><a href="/profile/{{log[1] }}">{{log[1]}}</a></td>        <!---USER ID-->
-            <td style="border: 1px solid black;">{{log[2]}}</td>              <!--USERNAME-->
-            <td style="border: 1px solid black;">{{log[3]}}</td>               <!--ACTION DONE-->
-            <td style="border: 1px solid black;">{{log[4]}}</td>                  <!--DETAILS-->
-            <td style="border: 1px solid black;">{{log[5].strftime('%d, %H:%M %p, %Y')}}</td>                <!--TIME-->
-          </tr>
-          {% endfor %}
-        </table>
-    
-      </div>
   {% endblock%}

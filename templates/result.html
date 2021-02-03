@@ -4,27 +4,56 @@
 <div class="container">
     <h1>Results for {{keyword}}</h1>
     <p>
-    <h4> In Authors </h4>
-    {% if authors != [ ] %}
-    {% for author in authors %}
-    {{author}}
+      <strong><h4> Users:
+    {% if users[0] != 0 %}
+      {{users[0]}}</h4></strong><br>
+    {% for user in users[1] %}
+    <a href="/profile/guest-{{user[0]}}">{{user[0]}}</a>
     {% endfor %}
     {% else %}
-    No results found in Authors
+    No results found
     {% endif %}
     </p>
     <hr>
     <p>
-    <h4> In Post </h4>
-    {% if posts != [] %}
-    {% for post in posts %}
-    {{post}}
-    <hr>
-    {% endfor %}
-    {% else %}
-    No results found in Posts
-    {% endif %}
-    </p>
+      <strong><h4> Titles:
+        {% if titles[0] != 0 %}
+        {{titles[0]}}</h4></strong><br>
+        {% for title in titles[1] %}
+        <a href="/blog/{{title[1]}}">{{title[0]}}</a>,
+
+        {% endfor %}
+        {% else %}
+        No results found
+        {% endif %}
+        <hr>
+        </p>  
+
+        <p>
+          <strong><h4> Post:  
+            {% if posts[0] != 0 %}
+            {{posts[0]}}</h4></strong><br>
+            {% for post in posts[1] %}
+            <a href="/blog/{{post[1]}}" style="text-decoration: none;">{{post[0]}}</a><br><br>
+    
+            {% endfor %}
+            {% else %}
+            No results found
+            {% endif %}
+            <hr>
+            </p>  
+          <p>
+            <strong><h4>Comments: 
+            {% if comments[0] != 0 %}
+            {{comments[0]}} </h4></strong><br>
+            {% for comment in comments[1] %}
+            <a href="/blog/{{comment[1]}}">{{comment[0]}}</a><br>
+            {% endfor %}
+            {% else %}
+            No results found
+            {% endif %}
+            </p>
+            <hr>
 </div>
 
 
