@@ -34,9 +34,16 @@
             {% if posts[0] != 0 %}
             {{posts[0]}}</h4></strong><br>
             {% for post in posts[1] %}
-            <a href="/blog/{{post[1]}}" style="text-decoration: none;">{{post[0]}}</a><br><br>
     
+            {% if post[3].capitalize()  !=  'Yes' or  post[0] == username %}
+            
+            <a href="/blog/{{post[2]}}" style="text-decoration: none;">{{post[1]}}</a><br><br>
+            {% else %}
+            <a href="/blog/{{post[2]}}" style="text-decoration: none;"><input class="form-control" type="text" placeholder="Hidden Content" aria-label="Disabled input " disabled readonly></a><br>
+            {% endif %}
             {% endfor %}
+
+
             {% else %}
             No results found
             {% endif %}

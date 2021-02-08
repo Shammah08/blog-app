@@ -1,54 +1,43 @@
 {%extends 'base.html'%}
 
 {%block body%}
-<main>
+<main class="container">
+
     {% for detail in profile %}
-    <aside style="text-decoration: none; list-style: none;">
-        <h6>All Authors</h6>
-{% for user in data[3]%}
-           <li> 
-                <div >
-                    <strong class="text-gray-dark">{{user[0].capitalize()}} {{user[1].capitalize()}}</strong>
-                    {% if username == user[2] %}
-                    <a href="#"><span class="d-block">@{{user[2]}}</span></a>
-                    {% else %}
-                    <a href="/profile/guest-{{user[2]}}"><span class="d-block">@{{user[2]}}</span></a>
-                    {%endif%}
-                    <br>
-            </div></li>
-{%endfor%}
-</aside>
-    <div class="container"  style="margin-top: -250px;">
-            {% if username != detail[4] %}
-             <p><h3><strong> &nbsp;{{detail[1].capitalize()}} {{detail[2].capitalize()}}</strong></h3>
+    <div style="display: inline; " >
+        {% if username != detail[4] %}
+           <h3><strong> &nbsp;{{detail[1].capitalize()}} {{detail[2].capitalize()}}</strong></h3>
                 &nbsp;&nbsp;&nbsp;<a href="/profile/guest-{{guest_username}}"><small>{{guest_username.capitalize()}}</small></a>
             {% else %}
-                <a href="/settings"><button class="btn btn-dark" style="width:150px; float: right;margin-left: 10px">Settings </button> </a>
-                <a href="/my-to-do"><button class="btn btn-info" style="float:right;  width: 100px;">To Do</button></a>&nbsp;&nbsp;
-                <h4><strong> &nbsp;Hello {{username}}</strong></h4>
-                <a href="/blog/create">
-                <input type="button" class="btn btn-light" value="+New Post" style="width: 150px;"></a>
-                {% if username == 'Admin' %}
-                 <a href="/adminpanel">Admin Panel</a>
-                 {% endif %}
-            </p>
-            {% endif %}
-        <article style="white-space: pre-wrap; height: 200px;">{{detail[7]}}</article>
-        &nbsp; &nbsp; &nbsp;<em style="color: rgb(0, 0, 0);">Get in touch!</em><br>
+                
+                <div class="btn-group" role="group" aria-label="Basic outlined example" style="float: right;">
+                    <button type="button" class="btn btn-outline-primary"><a href="/my-to-do">My ToDo</a></button>
+                    <button type="button" class="btn btn-outline-primary"><a href="/settings">Settings</a></button>
+                    <button type="button" class="btn btn-outline-primary"><a href="/logout">Logout</a></button>
+                    {% if username == 'Admin' %}
+                    <a href="/adminpanel"><button type="button" class="btn btn-outline-danger">Admin Panel</button></a>
+                    {% endif %}
+                  </div><br><br><br>
+                  <h4 ><strong> &nbsp;Hello {{username}}</strong></h4>      
+            {% endif %}<br>
+        <article style="white-space: pre-wrap; height: 150px;">{{detail[7]}}</article><br><br>
+        <em style="color: rgb(0, 0, 0);">Get in touch!</em><br>
         <div class="action" style="display: flex; flex: 1;">
-            &nbsp; &nbsp; &nbsp;<a href="mailto:{{detail[3]}}"><button class="btn btn-dark">Send
+           <a href="mailto:{{detail[3]}}"><button class="btn btn-dark">Send
                     Mail</button></a>&nbsp;&nbsp;
             <a href="tel:0795058630"><button class="btn btn-info" style="width:100px;">Call</button></a>
         </div>
+    </div>
+
         {%endfor%}
 
-    </div><br>
-    <div class="container">
+    <br><br>
+    <div>
         {% for detail in profile %}
         {% if username != detail[4] %}
         <a class="nav-link" href="/{{guest_username}}/myposts">
-            {{guest_username}} has 
-            <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{mycount}}</span> public post(s)
+
+            <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{guest_username}} has  {{mycount}} Public post(s)</span> <br>
         </a>
         <em>{% for content in data[2] %}
         <strong><a href="/blog/{{content[0]}}" style="text-decoration: none;">{{content[2].capitalize()}}-</a></strong>
@@ -56,14 +45,28 @@
     
         {% else %}
     
-            <a href="/{{username}}/myposts">My posts</a>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"><a href="/{{username}}/myposts"><span class="visually-hidden">All My Posts +{{mycount}}</span></a></span>
             <span class="badge bg-light text-dark rounded-pill align-text-bottom">{{mycount}}</span><br>
-          <em>{% for title in data[2] %}
+          <em>  
+                      {% for title in data[2] %}
             <strong><a href="/blog/{{title[1]}}" style="text-decoration: none;"> {{title[0].capitalize()}}-</a></strong>
-         {%endfor%}</em>  
+         {%endfor%}</em>   <a href="/blog/create">
+            <input type="button" class="btn btn-light" value="+New Post" style="width: 150px;"></a>
         {% endif %}
         {%endfor%}
         <hr>
+        <div style="text-decoration: none; display: inline; list-style: none; " class="my-3 p-3 bg-white rounded shadow-sm">
+            {% for user in data[3]%}
+                    <div  class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                        {% if username != user[2] %}
+                        <strong class="text-gray-dark">{{user[0].capitalize()}} {{user[1].capitalize()}}</strong><br>
+                        <a href="/profile/guest-{{user[2]}}" style="float: left;"><span class="d-block">@{{user[2]}}</span></a>  
+                        &nbsp; <a style="float: right;" class="nav-link" href="/{{user[2]}}/myposts">View Posts</a>
+                        {%endif%}
+                      <br>
+                </div>
+    {%endfor%}
+            </div>
        
 <small class="d-block text-end mt-3">
     <a href="#">Help</a>
@@ -71,6 +74,6 @@
     </div>
 
   
-    </div>
+ 
 </main>
 {%endblock%}

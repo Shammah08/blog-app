@@ -80,19 +80,19 @@ def admin(username: str, userid: int) -> list:
         LOG_ACTIVITY = '''INSERT INTO activity(userid,username, log_action)
         VALUES (%s,%s,%s)'''
         cursor.execute(LOG_ACTIVITY,(userid,username,'Admin Panel'))
-        USERS_SQL = '''SELECT * FROM users'''
+        USERS_SQL = '''SELECT * FROM users ORDER BY userid DESC'''
         cursor.execute(USERS_SQL)
         users = cursor.fetchall()
-        COMMENT_SQL = '''SELECT * FROM comments'''
+        COMMENT_SQL = '''SELECT * FROM comments ORDER BY comment_id DESC'''
         cursor.execute(COMMENT_SQL)
         comments = cursor.fetchall()
-        ACTIVITY_LOG = '''SELECT * FROM activity'''
+        ACTIVITY_LOG = '''SELECT * FROM activity ORDER BY id DESC'''
         cursor.execute(ACTIVITY_LOG)
         logs = cursor.fetchall()
-        POST_SQL = '''SELECT * FROM post'''
+        POST_SQL = '''SELECT * FROM post ORDER BY post_id DESC'''
         cursor.execute(POST_SQL)
         posts = cursor.fetchall()
-        UPLOAD_SQL = '''SELECT * FROM uploads '''
+        UPLOAD_SQL = '''SELECT * FROM uploads ORDER BY id DESC '''
         cursor.execute(UPLOAD_SQL)
         uploads = cursor.fetchall()
         return [users, comments, logs, posts, uploads]
@@ -250,7 +250,18 @@ def del_comment(userid: int,username: str, comment_id: int, comment: str, post_i
         return cursor.execute(DELETE_SQL,(comment_id,))
 
 
+def get_comment(post_id: int) -> tuple:
+    with DbManager(**DBCONFIG)  as cursor:
+        COMMENT_SQL = '''SELECT * FROM comments WHERE post_id = %s '''
+        cursor.execute(COMMENT_SQL,(post_id,))
+        return cursor.fetchall()
 # GET POST FROM DB
+
+def get_post(post_id: int) -> tuple:
+    with DbManager(**DBCONFIG)  as cursor:
+        POST_SQL = '''SELECT * FROM post WHERE post_id = %s '''
+        cursor.execute(POST_SQL,(post_id,))
+        return cursor.fetchall()
 
 
 def get_all_posts(userid: int) -> 'Posts':
@@ -271,7 +282,10 @@ def get_all_posts(userid: int) -> 'Posts':
         ALL_USER_PUBLIC = """SELECT * FROM post WHERE privacy = 'NO'  AND user_id = %s ORDER BY date DESC """
         cursor.execute(ALL_USER_PUBLIC, (userid,))
         all_user_posts = cursor.fetchall()
-        return [all_personal_posts, all_public_posts, all_user_posts, users]
+        COMMENT_SQL = '''SELECT * FROM comments ORDER BY post_id DESC'''
+        cursor.execute(COMMENT_SQL)
+        all_comments = cursor.fetchall()
+        return [all_personal_posts, all_public_posts, all_user_posts, users,all_comments]
 
 
 def post_privacy(status):  # UNUSED FUNCTION
@@ -292,7 +306,7 @@ def db_search(userid: int, username: str, keyword: str) -> list:
         LOG_ACTIVITY = '''INSERT INTO activity(userid, username, log_action, log_detail)
         VALUES (%s,%s,%s, %s)'''
         cursor.execute(LOG_ACTIVITY,(userid, username, 'Search', keyword))
-        POST_SQL =  """SELECT content, post_id FROM post WHERE content LIKE CONCAT('%', %s, '%')"""
+        POST_SQL =  """SELECT author,content, post_id, privacy FROM post WHERE content LIKE CONCAT('%', %s, '%')"""
         cursor.execute(POST_SQL, (keyword,))
         posts = cursor.fetchall()
         TITLE_SQL = "SELECT title, post_id FROM post WHERE title LIKE CONCAT('%', %s, '%')"

@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<h1 style="text-align: center;">Wakanda</h1>
-<h2><strong> &nbsp;&nbsp;&nbsp;&nbsp; All Posts</strong></h2>
 <main >
+<h1 style="text-align: center;">Wakanda</h1>
+<h5><strong> &nbsp;&nbsp;&nbsp;&nbsp; All Posts</strong></h5>
   <div class="container"  >
     {%for title in post[1]%}
     <a href="/blog/{{title[0]}}" style="text-decoration: none;"><em>{{title[2].upper()}} <small> by

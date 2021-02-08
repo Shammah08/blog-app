@@ -3,8 +3,13 @@
 {% block body %}
 <main class="container">
 <strong>{{status}}</strong>
-<h2><strong>Profile Settings</strong></h2><br>
+<div class="btn-group" role="group" aria-label="Basic outlined example" style="float: right;">
+    <button type="button" class="btn btn-outline-primary"><a href="/profile">Profile</a></button>
+    <button type="button" class="btn btn-outline-primary"><a href="/my-to-do" >My To Do</a></button>
+    <button type="button" class="btn btn-outline-primary"><a href="/logout">Logout</a></button>
+</div><br><br>
 
+    <h4><strong>Profile Settings</strong></h4>
 {% for setting in data %}
 <div class="col-md-8 order-md-1">
     <form action="/settings" method="POST">
@@ -39,7 +44,7 @@
 
     <article >
         <h3>About</h3>
-        <textarea rows="10" cols="60" name='about' style="white-space: pre-wrap;">{{setting[7]}}</textarea>
+        <textarea  class="form-control" rows="10"  name='about' style="white-space: pre-wrap;">{{setting[7]}}</textarea>
     </article>
     <br>
     <div>

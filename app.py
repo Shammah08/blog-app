@@ -263,19 +263,20 @@ def create():
 
 @app.route('/<username>/myposts')
 def myposts(username):
-    print(username, session['username'])
     if username == session['username']:
         userid = session['userid']
         posts = get_all_posts(userid)[0]
-        count = len(posts[0])
-        return render_template('myposts.html', posts=posts, count=count, username=username)
+        comments = [len(get_all_posts(userid)[4]),get_all_posts(userid)[4]]
+        count = len(posts)
+        return render_template('myposts.html', posts=posts, count=count, comments=comments,username=username,profile_username=username)
     else:
         active_username = session['username']
         user = profile_data(username)
         userid = user[0][0]
         profile_username = user[0][4]
         posts = get_all_posts(userid)[2]
-        return render_template('myposts.html', posts=posts, username=active_username,profile_username=profile_username)
+        comments = [len(get_all_posts(userid)[4]),get_all_posts(userid)[4]]
+        return render_template('myposts.html', posts=posts, username=active_username,comments=comments,profile_username=profile_username)
 
 @app.route('/about')
 def about():
@@ -321,14 +322,9 @@ def post(id):
     data = get_all_posts(userid)
     users = user_profile(userid)
     count = len(data[1])
-    with DbManager(**DBCONFIG) as cursor:
-        SQL = '''SELECT * FROM post WHERE post_id = %s'''
-        COMMENT_SQL  = '''SELECT * FROM comments WHERE post_id = %s'''
-        cursor.execute(SQL, (id,))
-        content = cursor.fetchall()
-        cursor.execute(COMMENT_SQL,(id,))
-        comments = cursor.fetchall()
-        return render_template('post.html', content=content, count=count,users=users, username=username, userid=userid, comments=comments )
+    content = get_post(id)
+    comments = get_comment(id)
+    return render_template('post.html', content=content, count=count,users=users, username=username, userid=userid, comments=comments )
 
 
 # BLOG NAVIGATION
@@ -452,4 +448,4 @@ def bmi():
 
 
 if __name__ == '__main__':
-    app.run(port=3000, debug=True)
+    app.run(host='192.168.1.104',debug=True)

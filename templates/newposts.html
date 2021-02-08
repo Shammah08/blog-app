@@ -4,17 +4,23 @@
 <div style="margin-left: 2vh;" xmlns="http://www.w3.org/1999/html">
         <form action="/blog/create" method="POST">
             <h4>Title:</h4><input type="text" class="form-control" name="title" style="width: 300px;" placeholder="Title" required autofocus><br><br>
-            <textarea rows="20" cols="60" name= 'content' placeholder="Free your mind" required></textarea><br>
-            <div style="margin-left: 200px">
-                <strong>Private: &nbsp;
-                    <label for="yes" >
-                        Yes &nbsp;&nbsp;<input type="checkbox" name="yes" value="yes"><br>
-                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label for="no">
-                        No &nbsp;&nbsp;<input type="checkbox" name='no' value="no"><br>
+            <textarea rows="20" cols="60" name= 'content' placeholder="Free your mind" required style="width: 90vw;"></textarea><br>
+            <div class="form-check"  style="display: inline;">
+                <strong>Private: &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input class="form-check-input" type="checkbox" name="yes" id="yes" >
+                    <label class="form-check-label" for="yes">
+                     Yes
                     </label>
+                  </div>
+                  &nbsp;
+                  <div class="form-check"  style="display: inline;">
+                  <input class="form-check-input" type="checkbox" name="no" id="no" >
+                  <label class="form-check-label" for="no">
+                    No
+                  </label></div>
                 </strong>
-            </div>
+
+            </div><br>
 
             <br><br>
             <input type="file" name="post-photo" ><button class="btn btn-dark" style="margin-left: 250px; width: 150px; ">Post</button>
