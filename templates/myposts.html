@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main class="container">
+<aside style="list-style: none; margin: 10px 10px 10px 10px; ">
+    {% if username == profile_username%}
+    <a href="/blog/create">
+    <input type="button" class="btn btn-light" value="+New Post" style="width: 150px;"></a>
+  {% else %}
+    <small><strong style="text-align: center; position: relative;"><a href="/profile/guest-{{profile_username}}">By : {{profile_username}}</a></strong>
+    {% endif %}
+    {% for post in posts %}
+{% if post[6].capitalize() == 'Yes' %}
+<div style="background-color: rgb(34, 33, 33); border-radius: 10px; color: white; text-align: center;">
+   <small style="float: left;">&nbsp;&nbsp; Private</small>
+    <small  style="float: right;"> Posted: {{post[4].strftime('%a %d %b, %Y')}}</small>
+    <li><h4><a href="/blog/{{post[0]}}">{{post[2]}}</a> </h4></li>
+{% else %}
+<div style="text-align: center;">
+    <small  style="float: right;"> Posted: {{post[4].strftime('%a %d %b, %Y')}}</small>
+    <li style="float: left;"><h4><a href="/blog/{{post[0]}}" style="text-decoration: none;">{{post[2]}}</a> </h4></li>
+    {% endif %}
+    <br><br>
+<article style="white-space:normal; " class="form-control" rows="30">{{post[3][0:100]}}-<br>
+{{post[3][100:200]}}...<a href="/blog/{{post[0]}}" style="text-decoration: none;">Read More</a> </article>
+{% for comment in comments[1] %}
+<p>
+    {% if  post[0] == comment[0][1] %}
+<small style="float: left;">{{comment[0]}}comments</small> 
+{% endif %}
+
+{% endfor %}
+<!---FIX  THIS SECTION TO DISPLAY COMMENT COUNT AND IF POSSIBLE VIEW COUNT-->
+
+</p> 
+</div>
+{% endfor %}
+</aside>
+{% endblock %}
+</main>
